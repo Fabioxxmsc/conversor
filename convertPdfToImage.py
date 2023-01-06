@@ -1,13 +1,15 @@
 from pdf2image import convert_from_path
 import os
 import message as msg
+from config import Config
 
 class ConvertPdfToImage():
 
   def Convert(self, file):
     msg.Print('convert pdf to img: ' + file)
 
-    images = convert_from_path(file)
+    conf = Config()
+    images = convert_from_path(file, poppler_path = conf.PopplerPath())
 
     dirName, fileName = os.path.split(file)
 

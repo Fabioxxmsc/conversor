@@ -13,6 +13,7 @@ class Config():
     self.log = None
     self.dataSetPath = None
     self.tesseractThreads = None
+    self.poppler_path = None
 
   def TesseractPath(self):
     if self.tesseractPath is None:
@@ -33,6 +34,11 @@ class Config():
     if self.dataSetPath is None:
       self.dataSetPath = self.ReadIni('dataset', 'path', PATH_DEFAULT_DATASET)
     return self.dataSetPath
+
+  def PopplerPath(self):
+    if self.poppler_path is None:
+      self.poppler_path = self.ReadIni('pdf2image', 'poppler_path', '')
+    return self.poppler_path
 
   def SaveIni(self, section, option, value):
     if not self.parser.has_section(section):

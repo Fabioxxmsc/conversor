@@ -12,6 +12,25 @@ class ConvertImageToTxt():
   def Convert(self, file):
     msg.Print('convert img to txt')
 
+    afiles = []
+
+    if type(file) is list:
+      for afile in file:
+        afile = self.Execute(afile)
+        afiles.append(afile)
+
+    elif type(file) is str:
+      afile = self.Execute(file)
+      afiles.append(afile)
+
+    else:
+      raise TypeError('file is not a list or string')    
+
+    msg.Print('output')
+    msg.Print(afiles)
+    return afiles
+
+  def Execute(self, file):
     text_from_image = pytesseract.image_to_string(Image.open(file))
 
     dirName, fileName = os.path.split(file)
@@ -24,5 +43,4 @@ class ConvertImageToTxt():
     file.write(text_from_image)
     file.close()
 
-    msg.Print('output ' + afile)
     return afile

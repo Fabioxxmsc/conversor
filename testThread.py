@@ -21,9 +21,9 @@ class TestThread(Thread):
       for pathPdf in self.listPath:
         current = pathPdf + r'\doc.pdf'
         output = pdfToImage.Convert(current)
-        print('end test convert pdf to image in', self.threadName)
+        #print('end test convert pdf to image in', self.threadName)
 
-        print('begin test convert image to text')
+        #print('begin test convert image to text')
         imageToText = ConvertImageToTxt()
         pathImg = output
         output = imageToText.Convert(pathImg)
@@ -32,7 +32,7 @@ class TestThread(Thread):
 
   def AddList(self, item):
     self.listPath.append(item)
-    print('add item', item, 'to', self.threadName)
+    #print('add item', item, 'to', self.threadName)
 
 def main():  
   pathBase = os.getcwd()
@@ -51,7 +51,7 @@ def main():
     countThread = config.TesseractThreads()
 
   for i in range(countThread):
-    listThreads.append(TestThread('Thread ' + str(i)))
+    listThreads.append(TestThread('Thread ' + str(i + 1)))
 
   i = 0
   for dir in listDir:

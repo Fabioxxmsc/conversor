@@ -14,6 +14,7 @@ class Config():
     self.dataSetPath = None
     self.tesseractThreads = None
     self.poppler_path = None
+    self.qtd_paginas = None
 
   def TesseractPath(self):
     if self.tesseractPath is None:
@@ -39,6 +40,11 @@ class Config():
     if self.poppler_path is None:
       self.poppler_path = self.ReadIni('pdf2image', 'poppler_path', '')
     return self.poppler_path
+
+  def QtdPaginas(self):
+    if self.qtd_paginas is None:
+      self.qtd_paginas = int(self.ReadIni('pdf2image', 'qtd_paginas', '0'))
+    return self.qtd_paginas
 
   def SaveIni(self, section, option, value):
     if not self.parser.has_section(section):

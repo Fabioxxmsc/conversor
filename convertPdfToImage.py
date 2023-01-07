@@ -19,12 +19,11 @@ class ConvertPdfToImage():
     ext = fileName.split('.')
 
     afile = os.path.join(dirName, r'{0}'.format(ext[0]))
-    afiles = []
+    afiles = {}
   
     for i in range(len(images)):      
       pathName = afile + '_' + str(i + 1) + '.png'
-      images[i].save(pathName, 'PNG')
-      afiles.append(pathName)
+      afiles[pathName] = images[i]
 
       if self.conf.QtdPaginas() == 0:
         continue

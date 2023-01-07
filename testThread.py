@@ -18,15 +18,15 @@ class TestThread(Thread):
     else:
       print('begin test convert pdf to image in', self.threadName)
       pdfToImage = ConvertPdfToImage()
+      imageToText = ConvertImageToTxt()
+
       for pathPdf in self.listPath:
         current = pathPdf + r'\doc.pdf'
         output = pdfToImage.Convert(current)
         #print('end test convert pdf to image in', self.threadName)
 
-        #print('begin test convert image to text')
-        imageToText = ConvertImageToTxt()
-        pathImg = output
-        output = imageToText.Convert(pathImg)
+        #print('begin test convert image to text')        
+        output = imageToText.Convert(output)
         print(output)
         print('end test convert image to text')
 

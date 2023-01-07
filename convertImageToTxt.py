@@ -9,31 +9,26 @@ class ConvertImageToTxt():
     self.config = Config()
     pytesseract.pytesseract.tesseract_cmd = self.config.TesseractPath()
 
-  def Convert(self, file):
+  def Convert(self, file: dict):
     msg.Print('convert img to txt')
 
     afiles = []
 
-    if type(file) is list:
-      for afile in file:
-        afile = self.Execute(afile)
-        afiles.append(afile)
-
-    elif type(file) is str:
-      afile = self.Execute(file)
-      afiles.append(afile)
-
-    else:
-      raise TypeError('file is not a list or string')    
+    for chave, valor in file.items():
+      afile = self.Execute(chave, valor)
+      afiles.append(afile)  
 
     msg.Print('output')
     msg.Print(afiles)
     return afiles
 
-  def Execute(self, file):
-    text_from_image = pytesseract.image_to_string(Image.open(file))
+  def Execute(self, path: str, file: Image):
 
-    dirName, fileName = os.path.split(file)
+    aimage = Image.frombytes(file.mode, file.size, file.tobytes())
+    
+    text_from_image = pytesseract.image_to_string(aimage)
+
+    dirName, fileName = os.path.split(path)
 
     ext = fileName.split('.')
 

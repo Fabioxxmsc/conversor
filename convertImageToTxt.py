@@ -2,27 +2,29 @@ import pytesseract
 from config import Config
 from PIL import Image
 import os
-import message as msg
+from message import PrintLog
 
 class ConvertImageToTxt():
+  __config = None
+
   def __init__(self):
-    self.config = Config()
-    pytesseract.pytesseract.tesseract_cmd = self.config.TesseractPath()
+    self.__config = Config()
+    pytesseract.pytesseract.tesseract_cmd = self.__config.TesseractPath()
 
   def Convert(self, file: dict):
-    msg.Print('convert img to txt')
+    PrintLog('convert img to txt')
 
     afiles = []
 
     for chave, valor in file.items():
-      afile = self.Execute(chave, valor)
+      afile = self.__Execute(chave, valor)
       afiles.append(afile)  
 
-    msg.Print('output')
-    msg.Print(afiles)
+    PrintLog('output')
+    PrintLog(afiles)
     return afiles
 
-  def Execute(self, path: str, file: Image):
+  def __Execute(self, path: str, file: Image):
 
     aimage = Image.frombytes(file.mode, file.size, file.tobytes())
     

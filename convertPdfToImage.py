@@ -1,18 +1,22 @@
 from pdf2image import exceptions, convert_from_path
 import os
-import message as msg
+from message import PrintLog
 from config import Config
 
 class ConvertPdfToImage():
-  def __init__(self):
-    self.conf = Config()
-    self.poppler_path = self.conf.PopplerPath()
-    self.usePath = self.poppler_path != ''
+  __conf = None
+  __poppler_path = None
+  __usePath = None
 
-  def Convert(self, file):
-    msg.Print('convert pdf to img: ' + file)
+  def __init__(self):
+    self.__conf = Config()
+    self.__poppler_path = self.__conf.PopplerPath()
+    self.__usePath = self.__poppler_path != ''
+
+  def Convert(self, file) -> dict:
+    PrintLog('convert pdf to img: ' + file)
     
-    images = self.Execute(file)
+    images = self.__Execute(file)
 
     dirName, fileName = os.path.split(file)
     
@@ -25,22 +29,22 @@ class ConvertPdfToImage():
       pathName = afile + '_' + str(i + 1) + '.png'
       afiles[pathName] = images[i]
 
-      if self.conf.QtdPaginas() == 0:
+      if self.__conf.QtdPaginas() == 0:
         continue
 
-      if (i + 1) == self.conf.QtdPaginas():
+      if (i + 1) == self.__conf.QtdPaginas():
         break
 
-    msg.Print('output')
-    msg.Print(afiles)
+    PrintLog('output')
+    PrintLog(afiles)
     return afiles
 
-  def Execute(self, file):
+  def __Execute(self, file):
     try:
       images = convert_from_path(file)
     except exceptions.PDFInfoNotInstalledError:
-      if self.usePath:
-        images = convert_from_path(file, poppler_path = self.poppler_path)
+      if self.__usePath:
+        images = convert_from_path(file, poppler_path = self.__poppler_path)
       else:
         raise exceptions.PDFInfoNotInstalledError
     return images

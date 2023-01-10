@@ -1,7 +1,13 @@
 from config import Config
+import threading
 
-conf = Config()
+__conf = Config()
+__lock = threading.Lock()
 
-def Print(self):
-  if conf.Log():
+def PrintLog(self, force = False):
+  __lock.acquire()
+
+  if force or __conf.Log():
     print(self)
+    
+  __lock.release()

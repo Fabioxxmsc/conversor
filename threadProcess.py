@@ -5,15 +5,12 @@ from convertPdfToImage import ConvertPdfToImage
 from message import PrintLog
 from connectionDataBase import ConnectionDataBase
 
-import psycopg2
-
 class ThreadProcess(Thread):
   __threadID = None
   __listPath: list[str]
   __pdfToImage: ConvertPdfToImage = None
   __imageToText: ConvertImageToTxt = None
-  __con: ConnectionDataBase
-  __connection = None
+  __con: ConnectionDataBase = None
 
   def __init__(self, threadID, connection: ConnectionDataBase):
     Thread.__init__(self)
@@ -22,7 +19,6 @@ class ThreadProcess(Thread):
     self.__pdfToImage = ConvertPdfToImage()
     self.__imageToText = ConvertImageToTxt()
     self.__con = connection
-    self.__connection = self.__con.Connection()
 
     PrintLog("Thread " + str(self.__threadID) + " created!", True)
 
@@ -54,17 +50,5 @@ class ThreadProcess(Thread):
     PrintLog("Begin convert image to text in Thread " + str(self.__threadID) + "!")
     output = self.__imageToText.Convert(output)
     PrintLog("End convert image to text in Thread " + str(self.__threadID) + "!")
-
-    cur = self.__connection.cursor()
-    try:
-      cur.execute("delete from documento")
-      doc = open(output[0], 'rb').read()
-      cur.execute("insert into documento (iddocumento, nomedoc, documento) values (%s, %s, %s)", (1, current, psycopg2.Binary(doc)))
-
-      self.__connection.commit()
-      cur.close()
-    except (Exception, psycopg2.DatabaseError) as error:
-      self.__connection.rollback()
-      print(error)
 
     PrintLog(output)

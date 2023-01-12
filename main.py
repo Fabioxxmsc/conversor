@@ -30,7 +30,7 @@ def GetCountThread(list, countConfig):
 
 def AddListThread(listThreads: list[ThreadProcess], countThread):
   for i in range(countThread):
-    listThreads.append(ThreadProcess(i + 1, ConnectionDataBase()))    
+    listThreads.append(ThreadProcess(i + 1, ConnectionDataBase(i + 1)))    
 
 def AddItemListThread(listThreads: list[ThreadProcess], countThread, listDir, pathDatset):
   i = 0

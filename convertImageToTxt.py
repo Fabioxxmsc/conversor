@@ -36,8 +36,8 @@ class ConvertImageToTxt():
 
     afile = os.path.join(dirName, r'{0}.txt'.format(ext[0]))
 
-    file = open(afile, 'w')
-    file.write(text_from_image)
-    file.close()
+    #file = open(afile, 'w')
+    #file.write(text_from_image)
+    #file.close()
 
     return afile

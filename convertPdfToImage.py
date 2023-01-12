@@ -1,4 +1,4 @@
-from pdf2image import exceptions, convert_from_path
+from pdf2image import exceptions, convert_from_bytes
 import os
 from message import PrintLog
 from config import Config
@@ -13,12 +13,12 @@ class ConvertPdfToImage():
     self.__poppler_path = self.__conf.PopplerPath()
     self.__usePath = self.__poppler_path != ''
 
-  def Convert(self, file) -> dict:
-    PrintLog('convert pdf to img: ' + file)
+  def Convert(self, file: bytes, name: str) -> dict:
+    PrintLog('convert pdf to img: ' + name)
     
     images = self.__Execute(file)
 
-    dirName, fileName = os.path.split(file)
+    dirName, fileName = os.path.split(name)
     
     ext = fileName.split('.')
 
@@ -41,10 +41,10 @@ class ConvertPdfToImage():
 
   def __Execute(self, file):
     try:
-      images = convert_from_path(file)
+      images = convert_from_bytes(file)
     except exceptions.PDFInfoNotInstalledError:
       if self.__usePath:
-        images = convert_from_path(file, poppler_path = self.__poppler_path)
+        images = convert_from_bytes(file, poppler_path = self.__poppler_path)
       else:
         raise exceptions.PDFInfoNotInstalledError
     return images

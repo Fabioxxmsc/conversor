@@ -3,9 +3,11 @@ from config import Config
 
 class ConnectionDataBase:
   __connection = None
+  __connId = None
 
-  def __init__(self):
+  def __init__(self, connId = None):
     self.__connection = None
+    self.__connId = connId
 
   def Connection(self):
     if self.__connection is not None:
@@ -19,7 +21,12 @@ class ConnectionDataBase:
                                            user = info.user, 
                                            password = info.password)
 
-      print("Connected to base", self.__connection.info.dbname)
+      if self.__connId is not None:
+        msgConn = "Connection " + str(self.__connId) + " connected to base " + str(self.__connection.info.dbname)
+      else:
+        msgConn = "Connected to base " + str(self.__connection.info.dbname)
+
+      print(msgConn)
       return self.__connection
     except (Exception, psycopg2.DatabaseError) as error:
       self.Close()

@@ -1,8 +1,8 @@
 import os
 import time
-from config import Config
-from threadProcess import ThreadProcess
-from connectionDataBase import ConnectionDataBase
+from config.config import Config
+from process.threadProcess import ThreadProcess
+from datamodule.connectionDataBase import ConnectionDataBase
 
 def main():
   pathBase = os.getcwd()

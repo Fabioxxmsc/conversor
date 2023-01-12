@@ -1,4 +1,4 @@
-from connectionDataBase import ConnectionDataBase
+from datamodule.connectionDataBase import ConnectionDataBase
 import psycopg2
 
 class BlockCommand():

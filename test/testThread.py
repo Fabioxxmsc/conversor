@@ -1,7 +1,7 @@
 import os
-from config import Config
-from convertImageToTxt import ConvertImageToTxt
-from convertPdfToImage import ConvertPdfToImage
+from config.config import Config
+from process.convertImageToTxt import ConvertImageToTxt
+from process.convertPdfToImage import ConvertPdfToImage
 from threading import Thread
 import time
 

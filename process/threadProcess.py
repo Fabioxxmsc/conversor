@@ -1,10 +1,10 @@
 import os
 from threading import Thread
-from convertImageToTxt import ConvertImageToTxt
-from convertPdfToImage import ConvertPdfToImage
+from process.convertImageToTxt import ConvertImageToTxt
+from process.convertPdfToImage import ConvertPdfToImage
 from message import PrintLog
-from connectionDataBase import ConnectionDataBase
-from saveDocuments import SaveDocuments
+from datamodule.connectionDataBase import ConnectionDataBase
+from datamodule.saveDocuments import SaveDocuments
 
 class ThreadProcess(Thread):
   __threadID = None

@@ -1,7 +1,7 @@
 from pdf2image import exceptions, convert_from_bytes
 import os
 from message import PrintLog
-from config import Config
+from config.config import Config
 
 class ConvertPdfToImage():
   __conf = None

@@ -1,5 +1,5 @@
 import pytesseract
-from config import Config
+from config.config import Config
 from PIL import Image
 import os
 from message import PrintLog

@@ -1,5 +1,5 @@
 import psycopg2
-from config import Config
+from config.config import Config
 
 class ConnectionDataBase:
   __connection = None

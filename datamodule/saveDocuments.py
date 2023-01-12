@@ -1,5 +1,5 @@
-from connectionDataBase import ConnectionDataBase
-from blockCommand import BlockCommand
+from datamodule.connectionDataBase import ConnectionDataBase
+from datamodule.blockCommand import BlockCommand
 import hashlib
 import psycopg2
 

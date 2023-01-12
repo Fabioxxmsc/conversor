@@ -1,7 +1,7 @@
 import os
 from convertPdfToImage import ConvertPdfToImage
 from convertImageToTxt import ConvertImageToTxt
-from config import Config
+from config.config import Config
 
 pdfToImage = ConvertPdfToImage()
 imageToTxt = ConvertImageToTxt()

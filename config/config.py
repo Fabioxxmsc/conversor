@@ -1,9 +1,9 @@
 import configparser
-from connectionInfo import ConnectionInfo
+from datamodule.connectionInfo import ConnectionInfo
 
 PATH_DEFAULT_TESSERACT = r'C:\Program Files (x86)\Tesseract-OCR\tesseract.exe'
 PATH_DEFAULT_DATASET = r'C:\dataset'
-FILE_NAME_INI = 'config.ini'
+FILE_NAME_INI = r'config\config.ini'
 
 class Config():
   __parser = None

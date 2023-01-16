@@ -3,14 +3,19 @@ import time
 from config.config import Config
 from process.threadProcess import ThreadProcess
 from datamodule.connectionDataBase import ConnectionDataBase
+from crud.prepareInit import PrepareInit
 
 def main():
-  pathBase = os.getcwd()
-  pathDatset = os.path.join(pathBase, r'test')
-  pathDatset = os.path.join(pathDatset, r'dataset')
-  listDir = os.listdir(pathDatset)
+
+  prepare = PrepareInit(ConnectionDataBase(0))
+  prepare.Execute()
   
   config = Config()
+
+  pathDatset = config.DataSetPath()
+
+  listDir = os.listdir(pathDatset)  
+  
   listThreads: list[ThreadProcess] = []
 
   countThread = GetCountThread(listDir, config.TesseractThreads())

@@ -10,6 +10,7 @@ class Config():
   __tesseractPath = None
   __log = None
   __dataSetPath = None
+  __dropAll = None
   __tesseractThreads = None
   __poppler_path = None
   __qtd_paginas = None
@@ -22,6 +23,7 @@ class Config():
     self.__tesseractPath = None
     self.__log = None
     self.__dataSetPath = None
+    self.__dropAll = None
     self.__tesseractThreads = None
     self.__poppler_path = None
     self.__qtd_paginas = None
@@ -46,6 +48,11 @@ class Config():
     if self.__dataSetPath is None:
       self.__dataSetPath = self.ReadIni('dataset', 'path', PATH_DEFAULT_DATASET)
     return self.__dataSetPath
+
+  def DropAll(self):
+    if self.__dropAll is None:
+      self.__dropAll = self.ReadIni('dataset', 'drop', 'False')
+    return self.__dropAll in ['True', 'true', '1']
 
   def PopplerPath(self):
     if self.__poppler_path is None:

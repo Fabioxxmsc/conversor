@@ -15,17 +15,17 @@ block.Execute()
 
 block.AddCommand("delete from documento")
 for key in seq:
-  query = "insert into documento (iddocumento, nomedoc, documento, hash) values (%s, %s, %s, %s)"
+    query = "insert into documento (iddocumento, nomedoc, documento, hash) values (%s, %s, %s, %s)"
 
-  docBinary = psycopg2.Binary(doc)
-  hashDoc = hashlib.md5(doc).hexdigest()
+    docBinary = psycopg2.Binary(doc)
+    hashDoc = hashlib.md5(doc).hexdigest()
 
-  args = (key, 
-          "current_" + str(key), 
-          docBinary,
-          hashDoc)
+    args = (key,
+            "current_" + str(key),
+            docBinary,
+            hashDoc)
 
-  block.AddCommand(query, args)
+    block.AddCommand(query, args)
 
 block.Execute()
 
@@ -33,23 +33,24 @@ conn = objConn.Connection()
 
 cur = conn.cursor()
 try:
-  cur.execute("select * from documento")
+    cur.execute("select * from documento")
 
-  ixiddocumento = 0
-  ixnomedoc = 1
-  ixdocumento = 2
-  ixhash = 3
+    ixiddocumento = 0
+    ixnomedoc = 1
+    ixdocumento = 2
+    ixhash = 3
 
-  data = cur.fetchall()
-  for row in data:
-    print("Id", row[ixiddocumento], "Nome", row[ixnomedoc], "Hash", row[ixhash], "Compare", row[ixhash] == hashDoc)
+    data = cur.fetchall()
+    for row in data:
+        print("Id", row[ixiddocumento], "Nome", row[ixnomedoc],
+              "Hash", row[ixhash], "Compare", row[ixhash] == hashDoc)
 
-  cur.execute("delete from documento")
-  conn.commit()
+    cur.execute("delete from documento")
+    conn.commit()
 except Exception as e:
-  conn.rollback()
-  print(e)
+    conn.rollback()
+    print(e)
 finally:
-  if cur is not None:
-    if not cur.closed:
-      cur.close()
+    if cur is not None:
+        if not cur.closed:
+            cur.close()

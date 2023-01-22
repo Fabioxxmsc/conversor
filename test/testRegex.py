@@ -7,6 +7,6 @@ strPattern = '00.758.947/0001-66'
 math = re.search(strPattern, inputText)
 
 if inputText[math.start(): math.end()] == strPattern:
-  print('matched')
+    print('matched')
 else:
-  print('not matched')
+    print('not matched')

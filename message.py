@@ -5,9 +5,9 @@ __conf = Config()
 __lock = threading.Lock()
 
 def PrintLog(self, force = False):
-  __lock.acquire()
+    __lock.acquire()
 
-  if force or __conf.Log():
-    print(self)
+    if force or __conf.Log():
+        print(self)
     
-  __lock.release()
+    __lock.release()

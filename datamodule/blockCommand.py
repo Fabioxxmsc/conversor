@@ -32,7 +32,7 @@ class BlockCommand():
 
         except (Exception, psycopg2.DatabaseError) as error:
             conn.rollback()
-            print("Error execute block command!", error)
+            print('Error execute block command!', error)
             raise
 
         finally:
@@ -41,11 +41,11 @@ class BlockCommand():
                     cursor.close()
 
     def __GetQuery(self):
-        query = "do $$ begin "
+        query = 'do $$ begin '
 
         for command in self.__listCommand:
-            query += command + ";"
-        query += " end $$;"
+            query += command + ';'
+        query += ' end $$;'
 
         return query
 

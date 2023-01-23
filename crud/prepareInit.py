@@ -4,6 +4,7 @@ import psycopg2
 import crud.scriptSequences as sc
 import crud.scriptTables as st
 import crud.scriptCrud as sr
+import utils.consts as utl
 
 
 class PrepareInit:
@@ -30,7 +31,7 @@ class PrepareInit:
             connection.commit()
         except (Exception, psycopg2.DatabaseError) as error:
             connection.rollback()
-            print("error preparing DataBase!", error)
+            print('error preparing DataBase!', error)
             raise
 
         finally:
@@ -51,9 +52,9 @@ class PrepareInit:
         cursor.execute(sc.SE_SEQGABARITO)
 
     def __FixedValues(self, cursor):
-        cursor.execute(sr.SC_INSERTCLASSEVALOR, (1, "data"))
-        cursor.execute(sr.SC_INSERTCLASSEVALOR, (2, "inscricao"))
-        cursor.execute(sr.SC_INSERTCLASSEVALOR, (3, "valor"))
+        cursor.execute(sr.SC_INSERTCLASSEVALOR, (utl.CLASSE_VALOR_DATA, 'data')) 
+        cursor.execute(sr.SC_INSERTCLASSEVALOR, (utl.CLASSE_VALOR_INSCRICAO, 'inscricao'))
+        cursor.execute(sr.SC_INSERTCLASSEVALOR, (utl.CLASSE_VALOR_VALOR, 'valor'))
 
     def DropAll(self):
         connection = self.__conn.Connection()
@@ -73,7 +74,7 @@ class PrepareInit:
             connection.commit()
         except (Exception, psycopg2.DatabaseError) as error:
             connection.rollback()
-            print("error drop all!", error)
+            print('error drop all!', error)
             raise
 
         finally:

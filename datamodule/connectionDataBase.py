@@ -23,18 +23,15 @@ class ConnectionDataBase:
                                                  password=info.password)
 
             if self.__connId is not None:
-                msgConn = "Connection " + \
-                    str(self.__connId) + " connected to base " + \
-                    str(self.__connection.info.dbname)
+                msgConn = 'Connection ' + str(self.__connId) + ' connected to base ' + str(self.__connection.info.dbname)
             else:
-                msgConn = "Connected to base " + \
-                    str(self.__connection.info.dbname)
+                msgConn = 'Connected to base ' + str(self.__connection.info.dbname)
 
             print(msgConn)
             return self.__connection
         except (Exception, psycopg2.DatabaseError) as error:
             self.Close()
-            print("Error connecting to base! ", error)
+            print('Error connecting to base! ', error)
             raise
 
     def NextSequence(self, sequence, count=1) -> list:
@@ -42,7 +39,7 @@ class ConnectionDataBase:
         conn = self.Connection()
         cursor = conn.cursor()
         try:
-            query = "select nextval(%s) from generate_series(1, %s)"
+            query = 'select nextval(%s) from generate_series(1, %s)'
             args = (str(sequence), count)
 
             cursor.execute(query, args)
@@ -62,7 +59,7 @@ class ConnectionDataBase:
             return seq
         except (Exception, psycopg2.DatabaseError) as error:
             conn.rollback()
-            print("Error get sequence " + str(sequence) + "!", error)
+            print('Error get sequence ' + str(sequence) + '!', error)
             raise
 
         finally:
@@ -72,7 +69,7 @@ class ConnectionDataBase:
 
     def Close(self):
         if self.__connection is not None:
-            print("Desconnected to base", self.__connection.info.dbname)
+            print('Desconnected to base', self.__connection.info.dbname)
             self.__connection.close()
 
     def __del__(self):

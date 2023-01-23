@@ -1,6 +1,7 @@
 import os
 import time
 from config.config import Config
+from process.threadInsertData import ThreadInsertData
 from process.threadProcess import ThreadProcess
 from datamodule.connectionDataBase import ConnectionDataBase
 from crud.prepareInit import PrepareInit
@@ -14,9 +15,13 @@ def main():
 
     pathDatset = config.DataSetPath()
 
+    if not os.path.isdir(pathDatset):
+        print('Path DataSet "' + str(pathDatset) + '" not found!')
+        return
+
     listDir = os.listdir(pathDatset)  
 
-    listThreads: list[ThreadProcess] = []
+    listThreads: list[ThreadInsertData] = []
 
     countThread = GetCountThread(listDir, config.TesseractThreads())
 
@@ -33,11 +38,11 @@ def main():
 def GetCountThread(list, countConfig):
     return len(list) if len(list) <= countConfig else countConfig
 
-def AddListThread(listThreads: list[ThreadProcess], countThread):
+def AddListThread(listThreads: list[ThreadInsertData], countThread):
     for i in range(countThread):
-        listThreads.append(ThreadProcess(i + 1, ConnectionDataBase(i + 1)))    
+        listThreads.append(ThreadInsertData(i + 1, ConnectionDataBase(i + 1)))    
 
-def AddItemListThread(listThreads: list[ThreadProcess], countThread, listDir, pathDatset):
+def AddItemListThread(listThreads: list[ThreadInsertData], countThread, listDir, pathDatset):
     i = 0
     for dir in listDir:
         current = os.path.join(pathDatset, dir)
@@ -48,11 +53,11 @@ def AddItemListThread(listThreads: list[ThreadProcess], countThread, listDir, pa
             listThreads[i].addItemList(current)
             i += 1
 
-def RunThread(listThreads: list[ThreadProcess]):
+def RunThread(listThreads: list[ThreadInsertData]):
     for thread in listThreads:
         thread.start()
 
-def WaitThread(listThreads: list[ThreadProcess]):
+def WaitThread(listThreads: list[ThreadInsertData]):
     for thread in listThreads:
         thread.join()
 

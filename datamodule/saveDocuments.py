@@ -20,6 +20,19 @@ class SaveDocuments:
 
         self.__blockCommand.AddCommand(query, args)
 
+    def AddAnswer(self, idDoc: int, idAns: int):
+
+        query = sc.SC_INSERTGABARITO
+        args = (idAns, idDoc)
+
+        self.__blockCommand.AddCommand(query, args)    
+
+    def AddAnswerValue(self, idAns: int, idClass: int, value: str):
+        query = sc.SC_INSERTGABARITOVALOR
+        args = (idAns, idClass, idClass, value)
+
+        self.__blockCommand.AddCommand(query, args)
+
     def __GetArgs(self, file: bytes, name: str, id: int) -> tuple:
         docBinary = psycopg2.Binary(file)
         hashDoc = hashlib.md5(file).hexdigest()

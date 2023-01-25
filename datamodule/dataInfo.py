@@ -1,3 +1,4 @@
+from PIL import Image
 
 class DataInfo:
     __idClass = 0
@@ -10,6 +11,10 @@ class DataInfo:
     __idAnswer = 0
     __idAnswerValue = 0
     __valueAnswer = ''
+    __listImage: list[Image.Image]
+
+    def __init__(self):
+        self.__listImage = []
 
     @property
     def idClass(self):
@@ -90,3 +95,11 @@ class DataInfo:
     @valueAnswer.setter
     def valueAnswer(self, value):
         self.__valueAnswer = value
+
+    @property
+    def listImage(self):
+        return self.__listImage
+
+    @listImage.setter
+    def listImage(self, value):
+        self.__listImage = value

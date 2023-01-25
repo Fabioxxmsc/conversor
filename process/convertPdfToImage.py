@@ -2,7 +2,8 @@ from pdf2image import exceptions, convert_from_bytes
 import os
 from message import PrintLog
 from config.config import Config
-
+from datamodule.dataInfo import DataInfo
+from PIL import Image
 
 class ConvertPdfToImage():
     __conf = None
@@ -14,10 +15,17 @@ class ConvertPdfToImage():
         self.__poppler_path = self.__conf.PopplerPath()
         self.__usePath = self.__poppler_path != ''
 
-    def Convert(self, file: bytes, name: str) -> dict:
+    def Convert(self, item: DataInfo) -> dict:
+
+        file = item.document
+        name = item.nameDocument
+
         PrintLog('convert pdf to img: ' + name)
 
         images = self.__Execute(file)
+
+        for img in images:
+            item.listImage.append(img)
 
         dirName, fileName = os.path.split(name)
 
@@ -40,7 +48,7 @@ class ConvertPdfToImage():
         PrintLog(afiles)
         return afiles
 
-    def __Execute(self, file):
+    def __Execute(self, file) -> list[Image.Image]:
         try:
             images = convert_from_bytes(file)
         except exceptions.PDFInfoNotInstalledError:

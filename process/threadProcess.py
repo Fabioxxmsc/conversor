@@ -5,11 +5,12 @@ from process.convertPdfToImage import ConvertPdfToImage
 from message import PrintLog
 from datamodule.connectionDataBase import ConnectionDataBase
 from datamodule.saveDocuments import SaveDocuments
+from datamodule.dataInfo import DataInfo
 
 
 class ThreadProcess(Thread):
     __threadID = None
-    __listPath: list[str]
+    __listDataInfo: list[DataInfo]
     __pdfToImage: ConvertPdfToImage = None
     __imageToText: ConvertImageToTxt = None
     __con: ConnectionDataBase = None
@@ -18,7 +19,7 @@ class ThreadProcess(Thread):
     def __init__(self, threadID, connection: ConnectionDataBase):
         Thread.__init__(self)
         self.__threadID = threadID
-        self.__listPath = []
+        self.__listDataInfo = []
         self.__pdfToImage = ConvertPdfToImage()
         self.__imageToText = ConvertImageToTxt()
         self.__con = connection
@@ -27,7 +28,7 @@ class ThreadProcess(Thread):
         PrintLog('Thread ' + str(self.__threadID) + ' created!', True)
 
     def run(self):
-        count = len(self.__listPath)
+        count = len(self.__listDataInfo)
 
         if count == 0:
             PrintLog('List path is empty in Thread ' + str(self.__threadID) + '!')
@@ -35,26 +36,21 @@ class ThreadProcess(Thread):
         else:
             PrintLog('Thread ' + str(self.__threadID) + ' started with ' + str(count) + ' items!', True)
 
-            listKey = self.__con.NextSequence('seqdocumento', count)
-
-            for index, path in enumerate(self.__listPath):
-                self.__Execute(listKey[index], path)
-                PrintLog('Processed ' + path + ' in Thread ' + str(self.__threadID))
+            for item in self.__listDataInfo:
+                self.__Execute(item)
+                PrintLog('Processed ' + item.nameDocument + ' in Thread ' + str(self.__threadID))
 
             self.__saveDocuments.Save()
 
             PrintLog('Thread ' + str(self.__threadID) + ' finished!', True)
 
-    def addItemList(self, item):
-        self.__listPath.append(item)
-        PrintLog('Item' + item + ' add in Thread ' + str(self.__threadID) + '!')
+    def addItemList(self, item: DataInfo):
+        self.__listDataInfo.append(item)
+        PrintLog('Item ' + item.nameDocument + ' add in Thread ' + str(self.__threadID) + '!')
 
-    def __Execute(self, key, path):
-        current = os.path.join(path, r'doc.pdf')
-
-        file = open(current, 'rb')
-        binaryDoc = file.read()
-        file.close()
+    def __Execute(self, item: DataInfo):
+        binaryDoc = item.document
+        current = item.nameDocument
 
         PrintLog('Begin convert pdf to image in Thread ' + str(self.__threadID) + '!')
         output = self.__pdfToImage.Convert(binaryDoc, current)
@@ -64,6 +60,6 @@ class ThreadProcess(Thread):
         output = self.__imageToText.Convert(output)
         PrintLog('End convert image to text in Thread ' + str(self.__threadID) + '!')
 
-        PrintLog('Begin save document in Thread ' + str(self.__threadID) + '!')
-        self.__saveDocuments.AddDocument(binaryDoc, current, key)
-        PrintLog('End save document in Thread ' + str(self.__threadID) + '!')
+        #PrintLog('Begin save document in Thread ' + str(self.__threadID) + '!')
+        #self.__saveDocuments.AddDocument(binaryDoc, current, key)
+        #PrintLog('End save document in Thread ' + str(self.__threadID) + '!')

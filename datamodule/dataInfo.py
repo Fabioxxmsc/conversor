@@ -5,16 +5,19 @@ class DataInfo:
     __idDocument = 0
     __nameDocument = ''
     __hashDocument = ''
-    __document = None
+    __document: bytes
     __idDocumentValue = 0
     __value = ''
     __idAnswer = 0
     __idAnswerValue = 0
     __valueAnswer = ''
     __listImage: list[Image.Image]
+    __listText: list[str]
 
     def __init__(self):
+        self.__document = None
         self.__listImage = []
+        self.__listText = []
 
     @property
     def idClass(self):
@@ -103,3 +106,11 @@ class DataInfo:
     @listImage.setter
     def listImage(self, value):
         self.__listImage = value
+
+    @property
+    def listText(self):
+        return self.__listText
+
+    @listText.setter
+    def listText(self, value):
+        self.__listText = value

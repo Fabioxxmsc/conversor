@@ -4,7 +4,7 @@ from process.convertImageToTxt import ConvertImageToTxt
 from process.convertPdfToImage import ConvertPdfToImage
 from message import PrintLog
 from datamodule.connectionDataBase import ConnectionDataBase
-#from datamodule.saveDocuments import SaveDocuments
+from datamodule.saveDocuments import SaveDocuments
 from datamodule.dataInfo import DataInfo
 
 
@@ -14,7 +14,7 @@ class ThreadProcess(Thread):
     __pdfToImage: ConvertPdfToImage = None
     __imageToText: ConvertImageToTxt = None
     __con: ConnectionDataBase = None
-    #__saveDocuments: SaveDocuments = None
+    __saveDocuments: SaveDocuments = None
 
     def __init__(self, threadID, connection: ConnectionDataBase):
         Thread.__init__(self)
@@ -23,7 +23,7 @@ class ThreadProcess(Thread):
         self.__pdfToImage = ConvertPdfToImage()
         self.__imageToText = ConvertImageToTxt()
         self.__con = connection
-        #self.__saveDocuments = SaveDocuments(self.__con)
+        self.__saveDocuments = SaveDocuments(self.__con)
 
         PrintLog('Thread ' + str(self.__threadID) + ' created!', True)
 
@@ -40,7 +40,7 @@ class ThreadProcess(Thread):
                 self.__Execute(item)
                 PrintLog('Processed ' + item.nameDocument + ' in Thread ' + str(self.__threadID))
 
-            #self.__saveDocuments.Save()
+            self.__saveDocuments.Save()
 
             PrintLog('Thread ' + str(self.__threadID) + ' finished!', True)
 
@@ -50,13 +50,13 @@ class ThreadProcess(Thread):
 
     def __Execute(self, item: DataInfo):
         PrintLog('Begin convert pdf to image in Thread ' + str(self.__threadID) + '!')
-        output = self.__pdfToImage.Convert(item)
+        self.__pdfToImage.Convert(item)
         PrintLog('End convert pdf to image in Thread ' + str(self.__threadID) + '!')
 
         PrintLog('Begin convert image to text in Thread ' + str(self.__threadID) + '!')
-        output = self.__imageToText.Convert(output)
+        self.__imageToText.Convert(item)
         PrintLog('End convert image to text in Thread ' + str(self.__threadID) + '!')
 
-        #PrintLog('Begin save document in Thread ' + str(self.__threadID) + '!')
-        #self.__saveDocuments.AddDocument(binaryDoc, current, key)
-        #PrintLog('End save document in Thread ' + str(self.__threadID) + '!')
+        PrintLog('Begin save document in Thread ' + str(self.__threadID) + '!')
+        #self.__saveDocuments.AddDocument(item)
+        PrintLog('End save document in Thread ' + str(self.__threadID) + '!')

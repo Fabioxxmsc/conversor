@@ -1,5 +1,6 @@
 from datamodule.connectionDataBase import ConnectionDataBase
 from datamodule.blockCommand import BlockCommand
+from datamodule.dataInfo import DataInfo
 import crud.scriptCrud as sc
 import hashlib
 import psycopg2

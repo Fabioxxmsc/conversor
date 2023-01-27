@@ -25,28 +25,28 @@ class ThreadProcess(Thread):
         self.__con = connection
         self.__saveDocuments = SaveDocuments(self.__con)
 
-        PrintLog('Thread ' + str(self.__threadID) + ' created!', True)
+        PrintLog('Thread Process ' + str(self.__threadID) + ' created!', True)
 
     def run(self):
         count = len(self.__listDataInfo)
 
         if count == 0:
-            PrintLog('List path is empty in Thread ' + str(self.__threadID) + '!')
+            PrintLog('List path is empty in Thread Process ' + str(self.__threadID) + '!')
 
         else:
-            PrintLog('Thread ' + str(self.__threadID) + ' started with ' + str(count) + ' items!', True)
+            PrintLog('Thread Process ' + str(self.__threadID) + ' started with ' + str(count) + ' items!', True)
 
             for item in self.__listDataInfo:
                 self.__Execute(item)
-                PrintLog('Processed ' + item.nameDocument + ' in Thread ' + str(self.__threadID))
+                PrintLog('Processed ' + item.nameDocument + ' in Thread Process ' + str(self.__threadID))
 
             self.__saveDocuments.Save()
 
-            PrintLog('Thread ' + str(self.__threadID) + ' finished!', True)
+            PrintLog('Thread Process ' + str(self.__threadID) + ' finished!', True)
 
     def addItemList(self, item: DataInfo):
         self.__listDataInfo.append(item)
-        PrintLog('Item ' + item.nameDocument + ' add in Thread ' + str(self.__threadID) + '!')
+        PrintLog('Item ' + item.nameDocument + ' add in Thread Process ' + str(self.__threadID) + '!')
 
     def __Execute(self, item: DataInfo):
         PrintLog('Begin convert pdf to image in Thread ' + str(self.__threadID) + '!')
@@ -58,5 +58,5 @@ class ThreadProcess(Thread):
         PrintLog('End convert image to text in Thread ' + str(self.__threadID) + '!')
 
         PrintLog('Begin save document in Thread ' + str(self.__threadID) + '!')
-        #self.__saveDocuments.AddDocument(item)
+        #self.__saveDocuments.AddDocumentValue(item.idDocument, idDocValue, idClass, value)
         PrintLog('End save document in Thread ' + str(self.__threadID) + '!')

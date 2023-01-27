@@ -19,7 +19,7 @@ class ThreadInsertData(Thread):
         self.__con = connection
         self.__saveDocuments = SaveDocuments(self.__con)
 
-        PrintLog('Thread ' + str(self.__threadID) + ' created!', True)
+        PrintLog('Thread Insert Data ' + str(self.__threadID) + ' created!', True)
 
     def run(self):
         count = len(self.__listPath)
@@ -28,22 +28,22 @@ class ThreadInsertData(Thread):
             PrintLog('List path is empty in Thread ' + str(self.__threadID) + '!')
 
         else:
-            PrintLog('Thread ' + str(self.__threadID) + ' started with ' + str(count) + ' items!', True)
+            PrintLog('Thread Insert Data ' + str(self.__threadID) + ' started with ' + str(count) + ' items!', True)
 
             listKeyDoc = self.__con.NextSequence('seqdocumento', count)
             listKeyAns = self.__con.NextSequence('seqgabarito', count)
 
             for index, path in enumerate(self.__listPath):
                 self.__Execute(listKeyDoc[index], listKeyAns[index], path)
-                PrintLog('Processed ' + path + ' in Thread ' + str(self.__threadID))
+                PrintLog('Processed ' + path + ' in Thread Insert Data ' + str(self.__threadID))
 
             self.__saveDocuments.Save()
 
-            PrintLog('Thread ' + str(self.__threadID) + ' finished!', True)
+            PrintLog('Thread Insert Data ' + str(self.__threadID) + ' finished!', True)
 
     def addItemList(self, item):
         self.__listPath.append(item)
-        PrintLog('Item' + item + ' add in Thread ' + str(self.__threadID) + '!')
+        PrintLog('Item' + item + ' add in Thread Insert Data ' + str(self.__threadID) + '!')
 
     def __Execute(self, idDoc, idAns, path):
         current = os.path.join(path, r'doc.pdf')

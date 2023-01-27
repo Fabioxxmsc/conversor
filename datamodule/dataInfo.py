@@ -1,7 +1,8 @@
 from PIL import Image
+from datamodule.dataInfoDetail import DataInfoDetail
+
 
 class DataInfo:
-    __idClass = 0
     __idDocument = 0
     __nameDocument = ''
     __hashDocument = ''
@@ -9,23 +10,15 @@ class DataInfo:
     __idDocumentValue = 0
     __value = ''
     __idAnswer = 0
-    __idAnswerValue = 0
-    __valueAnswer = ''
     __listImage: list[Image.Image]
     __listText: list[str]
+    __listDataInfoDetail: list[DataInfoDetail]
 
     def __init__(self):
         self.__document = None
         self.__listImage = []
         self.__listText = []
-
-    @property
-    def idClass(self):
-        return self.__idClass
-
-    @idClass.setter
-    def idClass(self, value):
-        self.__idClass = value
+        self.__listDataInfoDetail = []
 
     @property
     def idDocument(self):
@@ -84,22 +77,6 @@ class DataInfo:
         self.__idAnswer = value
 
     @property
-    def idAnswerValue(self):
-        return self.__idAnswerValue
-
-    @idAnswerValue.setter
-    def idAnswerValue(self, value):
-        self.__idAnswerValue = value
-
-    @property
-    def valueAnswer(self):
-        return self.__valueAnswer
-
-    @valueAnswer.setter
-    def valueAnswer(self, value):
-        self.__valueAnswer = value
-
-    @property
     def listImage(self):
         return self.__listImage
 
@@ -114,3 +91,11 @@ class DataInfo:
     @listText.setter
     def listText(self, value):
         self.__listText = value
+
+    @property
+    def listDataInfoDetail(self):
+        return self.__listDataInfoDetail
+
+    @listDataInfoDetail.setter
+    def listDataInfoDetail(self, value):
+        self.__listDataInfoDetail = value

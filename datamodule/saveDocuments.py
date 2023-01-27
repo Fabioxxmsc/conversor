@@ -21,6 +21,12 @@ class SaveDocuments:
 
         self.__blockCommand.AddCommand(query, args)
 
+    def AddDocumentValue(self, idDoc: int, idDocValue: int, idClass: int, value: str):
+        query = sc.SC_INSERTDOCUMENTOVALOR
+        args = (idDoc, idDocValue, idClass, value)
+
+        self.__blockCommand.AddCommand(query, args)
+
     def AddAnswer(self, idDoc: int, idAns: int):
 
         query = sc.SC_INSERTGABARITO

@@ -6,6 +6,7 @@ from process.controlThreadProcess import ControlThreadProcess
 from datamodule.connectionDataBase import ConnectionDataBase
 from crud.prepareInit import PrepareInit
 
+
 def main():
 
     prepare = PrepareInit(ConnectionDataBase())
@@ -27,6 +28,8 @@ def main():
     ctrlThreadIns = ControlThreadInsert(countThread, pathDatset)
     ctrlThreadIns.Execute()
     print('Time:', time.time() - timeStart)
+
+    time.sleep(2)
 
     timeStart = time.time()
     ctrlThreadPro = ControlThreadProcess(countThread)

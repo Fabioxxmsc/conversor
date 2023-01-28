@@ -1,5 +1,6 @@
 from PIL import Image
 from datamodule.dataInfoDetail import DataInfoDetail
+from datamodule.trainingData import TrainingData
 
 
 class DataInfo:
@@ -13,12 +14,14 @@ class DataInfo:
     __listImage: list[Image.Image]
     __listText: list[str]
     __listDataInfoDetail: list[DataInfoDetail]
+    __trainingData: TrainingData
 
     def __init__(self):
         self.__document = None
         self.__listImage = []
         self.__listText = []
         self.__listDataInfoDetail = []
+        self.__trainingData = TrainingData()
 
     @property
     def idDocument(self):
@@ -99,3 +102,11 @@ class DataInfo:
     @listDataInfoDetail.setter
     def listDataInfoDetail(self, value):
         self.__listDataInfoDetail = value
+
+    @property
+    def trainingData(self):
+        return self.__trainingData
+
+    @trainingData.setter
+    def trainingData(self, value):
+        self.__trainingData = value

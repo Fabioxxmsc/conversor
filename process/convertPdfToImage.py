@@ -5,36 +5,37 @@ from datamodule.dataInfo import DataInfo
 from PIL import Image
 
 class ConvertPdfToImage():
-
     __conf = None
-
     __poppler_path = None
-
     __usePath = None
 
     def __init__(self):
-
         self.__conf = Config()
-
         self.__poppler_path = self.__conf.PopplerPath()
-
         self.__usePath = self.__poppler_path != ''
 
     def Convert(self, item: DataInfo):
-
-        images = self.__Execute(item.document)
-
+        images = self.__Execute(item)
         for img in images:
             item.listImage.append(img)
 
-    def __Execute(self, file: bytes) -> list[Image.Image]:
+    def __Execute(self, item: DataInfo) -> list[Image.Image]:
         try:
-            images = convert_from_bytes(file)
+            images = convert_from_bytes(item.document,
+                                        dpi=item.trainingData.dpi,
+                                        thread_count=item.trainingData.pplThread,
+                                        transparent=item.trainingData.pplTransparent,
+                                        grayscale=item.trainingData.pplGrayscale)
             
         except exceptions.PDFInfoNotInstalledError:
 
             if self.__usePath:
-                images = convert_from_bytes(file, poppler_path=self.__poppler_path)
+                images = convert_from_bytes(item.document,
+                                            dpi=item.trainingData.dpi,
+                                            thread_count=item.trainingData.pplThread,
+                                            transparent=item.trainingData.pplTransparent,
+                                            grayscale=item.trainingData.pplGrayscale, 
+                                            poppler_path=self.__poppler_path)
             else:
                 raise exceptions.PDFInfoNotInstalledError
                 

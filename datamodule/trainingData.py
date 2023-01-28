@@ -1,19 +1,24 @@
-
+import utils.consts as consts
 
 class TrainingData:
     __ppl_dpi: int
     __ppl_thread: int
     __ppl_transparent: bool
     __ppl_grayscale: bool
-#https://github.com/tesseract-ocr/tesseract/blob/main/doc/tesseract.1.asc
+    __tss_dpi: int
     __tss_lang: str
+    __tss_psm: int 
+    __tss_oem: int
 
     def __init__(self):
         self.__ppl_dpi = 200
         self.__ppl_thread = 1
         self.__ppl_transparent = False
         self.__ppl_grayscale = False
+        self.__tss_dpi = 300
         self.__tss_lang = 'eng+por'
+        self.__tss_psm = consts.TSS_PSM_03
+        self.__tss_oem = consts.TSS_OEM_03
 
     @property
     def pplDpi(self) -> int:
@@ -48,9 +53,33 @@ class TrainingData:
         self.__ppl_grayscale = value
 
     @property
+    def tssDpi(self) -> int:
+        return self.__tss_dpi
+
+    @tssDpi.setter
+    def tssDpi(self, value: int):
+        self.__tss_dpi = value
+
+    @property
     def tssLang(self) -> str:
         return self.__tss_lang
 
     @tssLang.setter
     def tssLang(self, value: str):
         self.__tss_lang = value
+
+    @property
+    def tssPsm(self) -> int:
+        return self.__tss_psm
+
+    @tssPsm.setter
+    def tssPsm(self, value: int):
+        self.__tss_psm = value
+
+    @property
+    def tssOem(self) -> int:
+        return self.__tss_oem
+
+    @tssOem.setter
+    def tssOem(self, value: int):
+        self.__tss_oem = value

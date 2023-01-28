@@ -19,10 +19,13 @@ class ConvertImageToTxt():
             item.listText.append(texto)
 
     def __Execute(self, file: Image, trainingData: TrainingData):
-        customConfig = r'--oem 3 --psm 6'
         aimage = Image.frombytes(file.mode, file.size, file.tobytes())
         text_from_image = pytesseract.image_to_string(aimage, 
                                                     lang=trainingData.tssLang,
-                                                    config=customConfig,
+                                                    config=self.__CustomConfig(trainingData),
                                                     output_type=pytesseract.Output.STRING)
         return text_from_image
+
+    def __CustomConfig(self, trainingData: TrainingData):
+        customConfig = r'--oem {} --psm {}'.format(str(trainingData.tssOem), str(trainingData.tssPsm))
+        return customConfig

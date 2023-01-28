@@ -1,7 +1,7 @@
-#import os
 from threading import Thread
-from process.convertImageToTxt import ConvertImageToTxt
 from process.convertPdfToImage import ConvertPdfToImage
+from process.adjustmentsOpenCV import AdjustmentsOpenCV
+from process.convertImageToTxt import ConvertImageToTxt
 from message import PrintLog
 from datamodule.connectionDataBase import ConnectionDataBase
 from datamodule.saveDocuments import SaveDocuments
@@ -12,6 +12,7 @@ class ThreadProcess(Thread):
     __threadID = None
     __listDataInfo: list[DataInfo]
     __pdfToImage: ConvertPdfToImage = None
+    __adjustmentCV: AdjustmentsOpenCV = None
     __imageToText: ConvertImageToTxt = None
     __con: ConnectionDataBase = None
     __saveDocuments: SaveDocuments = None
@@ -21,6 +22,7 @@ class ThreadProcess(Thread):
         self.__threadID = threadID
         self.__listDataInfo = []
         self.__pdfToImage = ConvertPdfToImage()
+        self.__adjustmentCV = AdjustmentsOpenCV()
         self.__imageToText = ConvertImageToTxt()
         self.__con = connection
         self.__saveDocuments = SaveDocuments(self.__con)
@@ -53,10 +55,16 @@ class ThreadProcess(Thread):
         self.__pdfToImage.Convert(item)
         PrintLog('End convert pdf to image in Thread ' + str(self.__threadID) + '!')
 
+        PrintLog('Begin adjustments in Thread ' + str(self.__threadID) + '!')
+        self.__adjustmentCV.Convert(item)
+        PrintLog('End adjustments in Thread ' + str(self.__threadID) + '!')
+
         PrintLog('Begin convert image to text in Thread ' + str(self.__threadID) + '!')
         self.__imageToText.Convert(item)
         PrintLog('End convert image to text in Thread ' + str(self.__threadID) + '!')
 
         PrintLog('Begin save document in Thread ' + str(self.__threadID) + '!')
+        for txt in item.listText:
+            PrintLog(txt, True)
         #self.__saveDocuments.AddDocumentValue(item.idDocument, idDocValue, idClass, value)
         PrintLog('End save document in Thread ' + str(self.__threadID) + '!')

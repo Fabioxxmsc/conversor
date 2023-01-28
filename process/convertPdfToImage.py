@@ -22,7 +22,7 @@ class ConvertPdfToImage():
     def __Execute(self, item: DataInfo) -> list[Image.Image]:
         try:
             images = convert_from_bytes(item.document,
-                                        dpi=item.trainingData.dpi,
+                                        dpi=item.trainingData.pplDpi,
                                         thread_count=item.trainingData.pplThread,
                                         transparent=item.trainingData.pplTransparent,
                                         grayscale=item.trainingData.pplGrayscale)
@@ -31,7 +31,7 @@ class ConvertPdfToImage():
 
             if self.__usePath:
                 images = convert_from_bytes(item.document,
-                                            dpi=item.trainingData.dpi,
+                                            dpi=item.trainingData.pplDpi,
                                             thread_count=item.trainingData.pplThread,
                                             transparent=item.trainingData.pplTransparent,
                                             grayscale=item.trainingData.pplGrayscale, 

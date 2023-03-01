@@ -65,6 +65,6 @@ class ThreadProcess(Thread):
 
         PrintLog('Begin save document in Thread ' + str(self.__threadID) + '!')
         for txt in item.listText:
-            PrintLog(txt, True)
+            PrintLog(txt) # Test
         #self.__saveDocuments.AddDocumentValue(item.idDocument, idDocValue, idClass, value)
         PrintLog('End save document in Thread ' + str(self.__threadID) + '!')

@@ -11,6 +11,7 @@ pathImg = os.path.join(pathBase, r'test\einsteinRuido.png')
 # Lendo a imagem que esta presente no mesmo diretorio
 # do arquivo mediana.py
 img = cv.imread(pathImg)
+print(type(img))
 
 # Aplicando o filtro de mediana da biblioteca OpenCV
 # que é importada como cv e atribuindo a variavel median

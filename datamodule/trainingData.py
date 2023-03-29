@@ -7,8 +7,10 @@ class TrainingData:
     __ppl_grayscale: bool
     __tss_dpi: int
     __tss_lang: str
-    __tss_psm: int 
+    __tss_psm: int
     __tss_oem: int
+    __cv_equalizeHist: bool
+    __cv_normalize: bool
 
     def __init__(self):
         self.__ppl_dpi = 200
@@ -19,6 +21,8 @@ class TrainingData:
         self.__tss_lang = 'eng+por'
         self.__tss_psm = consts.TSS_PSM_03
         self.__tss_oem = consts.TSS_OEM_03
+        self.__cv_equalizeHist = False
+        self.__cv_normalize = False
 
     @property
     def pplDpi(self) -> int:
@@ -83,3 +87,19 @@ class TrainingData:
     @tssOem.setter
     def tssOem(self, value: int):
         self.__tss_oem = value
+
+    @property
+    def cvEqualizeHist(self) -> bool:
+        return self.__cv_equalizeHist
+
+    @cvEqualizeHist.setter
+    def cvEqualizeHist(self, value: bool):
+        self.__cv_equalizeHist = value
+
+    @property
+    def cvNormalize(self) -> bool:
+        return self.__cv_normalize
+
+    @cvNormalize.setter
+    def cvNormalize(self, value: bool):
+        self.__cv_normalize = value

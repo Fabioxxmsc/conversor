@@ -56,6 +56,7 @@ class ThreadProcess(Thread):
         PrintLog('End convert pdf to image in Thread ' + str(self.__threadID) + '!')
 
         PrintLog('Begin adjustments in Thread ' + str(self.__threadID) + '!')
+        item.trainingData.cvNormalize = True # Test
         self.__adjustmentCV.Convert(item)
         PrintLog('End adjustments in Thread ' + str(self.__threadID) + '!')
 

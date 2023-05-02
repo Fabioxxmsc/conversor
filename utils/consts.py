@@ -2,9 +2,21 @@ CLASSE_VALOR_DATA = 1
 CLASSE_VALOR_INSCRICAO = 2
 CLASSE_VALOR_VALOR = 3
 
+ARGS_PDF2IMAGE_DPI = (200, 400, 600)
+ARGS_PDF2IMAGE_TRANSP = (True, False)
+ARGS_PDF2IMAGE_GRAYSC = (True, False)
+
+ARGS_OPENCV_EQUALIZEHIST = (True, False)
+ARGS_OPENCV_NORMALIZE = (True, False)
+
+ARGS_TESSERACT_DPI = (200, 400, 600)
+ARGS_TESSERACT_OEM = (0, 1, 2, 3)
+ARGS_TESSERACT_PSM = (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13)
+
 #https://github.com/tesseract-ocr/tesseract/blob/main/doc/tesseract.1.asc
 
 #Tesseract PSM
+#Set Tesseract to only run a subset of layout analysis and assume a certain form of image. The options for N are:
 TSS_PSM_00 = 0  # Orientation and script detection (OSD) only.
 TSS_PSM_01 = 1  # Automatic page segmentation with OSD.
 TSS_PSM_02 = 2  # Automatic page segmentation, but no OSD, or OCR. (not implemented)
@@ -21,6 +33,7 @@ TSS_PSM_12 = 12 # Sparse text with OSD.
 TSS_PSM_13 = 13 # Raw line. Treat the image as a single text line, bypassing hacks that are Tesseract-specific.
 
 #Tesseract OEM
+#Specify OCR Engine mode. The options for N are
 TSS_OEM_00 = 0  # Original Tesseract only.
 TSS_OEM_01 = 1  # Neural nets LSTM only.
 TSS_OEM_02 = 2  # Tesseract + LSTM.

@@ -6,7 +6,9 @@ from message import PrintLog
 from datamodule.connectionDataBase import ConnectionDataBase
 from datamodule.saveDocuments import SaveDocuments
 from datamodule.dataInfo import DataInfo
-
+from datamodule.trainingData import TrainingData
+import utils.consts as consts
+import itertools
 
 class ThreadProcess(Thread):
     __threadID = None
@@ -38,9 +40,45 @@ class ThreadProcess(Thread):
         else:
             PrintLog('Thread Process ' + str(self.__threadID) + ' started with ' + str(count) + ' items!', True)
 
+            params = list(itertools.product(consts.ARGS_PDF2IMAGE_DPI, 
+                                            consts.ARGS_PDF2IMAGE_TRANSP, 
+                                            consts.ARGS_PDF2IMAGE_GRAYSC, 
+                                            consts.ARGS_OPENCV_EQUALIZEHIST, 
+                                            consts.ARGS_OPENCV_NORMALIZE, 
+                                            consts.ARGS_TESSERACT_DPI, 
+                                            consts.ARGS_TESSERACT_OEM, 
+                                            consts.ARGS_TESSERACT_PSM))
+
+            cycles = len(params)
+            cycle = 1
+
+            PrintLog('Thread Process ' + str(self.__threadID) + ' started with ' + str(cycles) + ' cycles!', True)
             for item in self.__listDataInfo:
-                self.__Execute(item)
-                PrintLog('Processed ' + item.nameDocument + ' in Thread Process ' + str(self.__threadID))
+                for param in params:
+                    trainingData = TrainingData()
+
+                    #popler pdf to image
+                    trainingData.pplDpi = param[0]
+                    trainingData.pplTransparent = param[1]
+                    trainingData.pplGrayscale = param[2]
+
+                    #openCV
+                    trainingData.cvEqualizeHist = param[3]
+                    trainingData.cvNormalize = param[4]
+
+                    #tesseract
+                    trainingData.tssDpi = param[5]
+                    trainingData.tssOem = param[6]
+                    trainingData.tssPsm = param[7]
+
+                    item.trainingData = trainingData
+                    self.__Execute(item)
+
+                    if cycle % 10 == 0:
+                        PrintLog('Processed ' + str(cycle) + ' cycles in Thread Process ' + str(self.__threadID), True)
+                    cycle += 1
+
+                    PrintLog('Processed ' + item.nameDocument + ' in Thread Process ' + str(self.__threadID))
 
             self.__saveDocuments.Save()
 
@@ -56,7 +94,6 @@ class ThreadProcess(Thread):
         PrintLog('End convert pdf to image in Thread ' + str(self.__threadID) + '!')
 
         PrintLog('Begin adjustments in Thread ' + str(self.__threadID) + '!')
-        item.trainingData.cvNormalize = True # Test
         self.__adjustmentCV.Convert(item)
         PrintLog('End adjustments in Thread ' + str(self.__threadID) + '!')
 

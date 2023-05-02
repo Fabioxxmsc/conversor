@@ -21,7 +21,7 @@ class ConvertPdfToImage():
 
     def __Execute(self, item: DataInfo) -> list[Image.Image]:
         try:
-            images = convert_from_bytes(item.document,
+            images = convert_from_bytes(pdf_file=item.document,
                                         dpi=item.trainingData.pplDpi,
                                         thread_count=item.trainingData.pplThread,
                                         transparent=item.trainingData.pplTransparent,
@@ -30,7 +30,7 @@ class ConvertPdfToImage():
         except exceptions.PDFInfoNotInstalledError:
 
             if self.__usePath:
-                images = convert_from_bytes(item.document,
+                images = convert_from_bytes(pdf_file=item.document,
                                             dpi=item.trainingData.pplDpi,
                                             thread_count=item.trainingData.pplThread,
                                             transparent=item.trainingData.pplTransparent,

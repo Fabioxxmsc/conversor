@@ -21,7 +21,7 @@ class DataInfo:
         self.__listImage = []
         self.__listText = []
         self.__listDataInfoDetail = []
-        self.__trainingData = TrainingData()
+        self.__trainingData = None
 
     @property
     def idDocument(self):
@@ -53,7 +53,10 @@ class DataInfo:
 
     @document.setter
     def document(self, value):
-        self.__document = value
+        if isinstance(value, bytes):
+            self.__document = value
+        else:
+            raise TypeError('document must be bytes and not ' + str(type(value)))
 
     @property
     def idDocumentValue(self):

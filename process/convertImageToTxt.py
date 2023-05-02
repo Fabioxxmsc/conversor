@@ -11,6 +11,7 @@ class ConvertImageToTxt():
     def __init__(self):
         self.__config = Config()        
         pytesseract.pytesseract.tesseract_cmd = self.__config.TesseractPath()
+        PrintLog('Tesseract OCR version ' + str(pytesseract.get_tesseract_version()), True)
 
     def Convert(self, item: DataInfo):
 
@@ -19,13 +20,15 @@ class ConvertImageToTxt():
             item.listText.append(texto)
 
     def __Execute(self, file: Image, trainingData: TrainingData):
+        trainingData.tssOem = 3
+        trainingData.tssPsm = 3
         aimage = Image.frombytes(file.mode, file.size, file.tobytes())
+        customConfig = self.__CustomConfig(trainingData)
         text_from_image = pytesseract.image_to_string(aimage, 
                                                     lang=trainingData.tssLang,
-                                                    config=self.__CustomConfig(trainingData),
+                                                    config=customConfig,
                                                     output_type=pytesseract.Output.STRING)
         return text_from_image
 
     def __CustomConfig(self, trainingData: TrainingData):
-        customConfig = r'--oem {} --psm {}'.format(str(trainingData.tssOem), str(trainingData.tssPsm))
-        return customConfig
+        return r'--dpi {} --oem {} --psm {}'.format(str(trainingData.tssDpi), str(trainingData.tssOem), str(trainingData.tssPsm))

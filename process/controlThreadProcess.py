@@ -18,18 +18,11 @@ class ControlThreadProcess:
         self.__dicInfo = {}
 
     def Execute(self):
-
         self.__PrepareDicInfo()
-
-        count = 0
-        while count < 2: #loop training IA
-
-            self.__AddListThread()            
-            self.__AddItemListThread()
-            self.__RunThread()
-            self.__WaitThread()
-
-            count += 1
+        self.__AddListThread()            
+        self.__AddItemListThread()
+        self.__RunThread()
+        self.__WaitThread()
 
     def __PrepareDicInfo(self):
         connBase = ConnectionDataBase()
@@ -45,7 +38,7 @@ class ControlThreadProcess:
                 dataInfo.idDocument = row['iddocumento']
                 dataInfo.nameDocument = row['nomedoc']
                 dataInfo.hashDocument = row['hash']
-                dataInfo.document = row['documento']
+                dataInfo.document = bytes(row['documento'])
                 dataInfo.idAnswer = row['idgabarito']
 
                 self.__dicInfo[dataInfo.idAnswer] = dataInfo

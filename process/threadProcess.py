@@ -2,6 +2,7 @@ from threading import Thread
 from process.convertPdfToImage import ConvertPdfToImage
 from process.adjustmentsOpenCV import AdjustmentsOpenCV
 from process.convertImageToTxt import ConvertImageToTxt
+from process.prepareTextOutput import PrepareTextOutput
 from message import PrintLog
 from datamodule.connectionDataBase import ConnectionDataBase
 from datamodule.saveDocuments import SaveDocuments
@@ -16,6 +17,7 @@ class ThreadProcess(Thread):
     __pdfToImage: ConvertPdfToImage = None
     __adjustmentCV: AdjustmentsOpenCV = None
     __imageToText: ConvertImageToTxt = None
+    __prepareText: PrepareTextOutput = None
     __con: ConnectionDataBase = None
     __saveDocuments: SaveDocuments = None
 
@@ -26,6 +28,7 @@ class ThreadProcess(Thread):
         self.__pdfToImage = ConvertPdfToImage()
         self.__adjustmentCV = AdjustmentsOpenCV()
         self.__imageToText = ConvertImageToTxt()
+        self.__prepareText = PrepareTextOutput()
         self.__con = connection
         self.__saveDocuments = SaveDocuments(self.__con)
 
@@ -101,8 +104,12 @@ class ThreadProcess(Thread):
         self.__imageToText.Convert(item)
         PrintLog('End convert image to text in Thread ' + str(self.__threadID) + '!')
 
-        PrintLog('Begin save document in Thread ' + str(self.__threadID) + '!')
-        for txt in item.listText:
-            PrintLog(txt) # Test
-        #self.__saveDocuments.AddDocumentValue(item.idDocument, idDocValue, idClass, value)
+        PrintLog('Begin prepare text output in Thread ' + str(self.__threadID) + '!')
+        self.__prepareText.Convert(item.listText)
+        PrintLog('End prepare text output in Thread ' + str(self.__threadID) + '!')
+
+        PrintLog('Begin save document in Thread ' + str(self.__threadID) + '!')        
+        #self.__saveDocuments.AddDocumentValue(item.idDocument, idDocValue, idClass, self.__prepareText.date)
+        #self.__saveDocuments.AddDocumentValue(item.idDocument, idDocValue, idClass, self.__prepareText.registration)
+        #self.__saveDocuments.AddDocumentValue(item.idDocument, idDocValue, idClass, self.__prepareText.value)
         PrintLog('End save document in Thread ' + str(self.__threadID) + '!')

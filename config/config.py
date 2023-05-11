@@ -1,4 +1,5 @@
 import configparser
+import threading
 from datamodule.connectionInfo import ConnectionInfo
 
 PATH_DEFAULT_TESSERACT = r'C:\Program Files (x86)\Tesseract-OCR\tesseract.exe'
@@ -16,6 +17,8 @@ class Config():
     __poppler_path = None
     __qtd_paginas = None
     __connectionInfo: ConnectionInfo
+    __saveCicle = None
+    __lock = None
 
     def __init__(self):
         self.__parser = configparser.ConfigParser()
@@ -29,6 +32,8 @@ class Config():
         self.__poppler_path = None
         self.__qtd_paginas = None
         self.__connectionInfo = None
+        self.__saveCicle = None
+        self.__lock = threading.Lock()
 
     def TesseractPath(self):
         if self.__tesseractPath is None:
@@ -44,7 +49,7 @@ class Config():
 
     def Log(self):
         if self.__log is None:
-            self.__log = self.ReadIni('log', 'log', 'True')
+            self.__log = self.ReadIni('global', 'log', 'True')
         return self.__log in ['True', 'true', '1']
 
     def DataSetPath(self):
@@ -65,8 +70,7 @@ class Config():
 
     def QtdPaginas(self):
         if self.__qtd_paginas is None:
-            self.__qtd_paginas = int(self.ReadIni(
-                'pdf2image', 'qtd_paginas', '0'))
+            self.__qtd_paginas = int(self.ReadIni('pdf2image', 'qtd_paginas', '0'))
         return self.__qtd_paginas
 
     def ConnectionInfo(self) -> ConnectionInfo:
@@ -84,6 +88,21 @@ class Config():
                 'connection', 'password', '')
 
         return self.__connectionInfo
+
+    def SaveCicle(self):
+        if self.__saveCicle is None:
+            self.__saveCicle = int(self.ReadIni('global', 'save_cicle', '100'))
+        return self.__saveCicle
+
+    def Abort(self) -> bool:
+        self.__lock.acquire()
+
+        self.__parser.read(FILE_NAME_INI)
+        abort = self.ReadIni('global', 'abort', 'False')
+
+        self.__lock.release()
+        
+        return abort in ['True', 'true', '1']
 
     def SaveIni(self, section, option, value):
         if not self.__parser.has_section(section):

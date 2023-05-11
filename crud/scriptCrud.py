@@ -3,6 +3,7 @@ SC_INSERTCLASSEVALOR = 'insert into classevalor (idclasse, nome) values (%s, %s)
 SC_INSERTDOCUMENTO = 'insert into documento (iddocumento, nomedoc, hash, documento) values (%s, %s, %s, %s)'
 
 SC_INSERTDOCUMENTOVALOR = 'insert into documentovalor (iddocumento, iddocumentovalor, idclasse, valor) values (%s, %s, %s, %s)'
+SC_DELETEDOCUMENTOVALOR = 'delete from documentovalor dv where dv.iddocumento = %s and dv.iddocumentovalor = %s'
 
 SC_INSERTGABARITO = 'insert into gabarito (idgabarito, iddocumento) values (%s, %s)'
 

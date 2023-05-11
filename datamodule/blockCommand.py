@@ -8,8 +8,10 @@ class BlockCommand():
     __listArgs = []
 
     def __init__(self, objConnection=None):
-        self.__objConnection = ConnectionDataBase(
-        ) if objConnection is None else objConnection
+        self.__objConnection = ConnectionDataBase() if objConnection is None else objConnection
+        self.__ClearCommand()
+
+    def __ClearCommand(self):
         self.__listCommand = []
         self.__listArgs = []
 
@@ -36,6 +38,7 @@ class BlockCommand():
             raise
 
         finally:
+            self.__ClearCommand()
             if cursor is not None:
                 if not cursor.closed:
                     cursor.close()

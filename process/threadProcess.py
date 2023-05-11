@@ -3,11 +3,12 @@ from process.convertPdfToImage import ConvertPdfToImage
 from process.adjustmentsOpenCV import AdjustmentsOpenCV
 from process.convertImageToTxt import ConvertImageToTxt
 from process.prepareTextOutput import PrepareTextOutput
+from process.prepareTrainingData import PrepareTrainingData
 from message import PrintLog
 from datamodule.connectionDataBase import ConnectionDataBase
 from datamodule.saveDocuments import SaveDocuments
 from datamodule.dataInfo import DataInfo
-from datamodule.trainingData import TrainingData
+from config.config import Config
 import utils.consts as consts
 import itertools
 
@@ -20,6 +21,7 @@ class ThreadProcess(Thread):
     __prepareText: PrepareTextOutput = None
     __con: ConnectionDataBase = None
     __saveDocuments: SaveDocuments = None
+    __config: Config = None
 
     def __init__(self, threadID, connection: ConnectionDataBase):
         Thread.__init__(self)
@@ -31,6 +33,7 @@ class ThreadProcess(Thread):
         self.__prepareText = PrepareTextOutput()
         self.__con = connection
         self.__saveDocuments = SaveDocuments(self.__con)
+        self.__config = Config()
 
         PrintLog('Thread Process ' + str(self.__threadID) + ' created!', True)
 
@@ -57,33 +60,32 @@ class ThreadProcess(Thread):
 
             PrintLog('Thread Process ' + str(self.__threadID) + ' started with ' + str(cycles) + ' cycles!', True)
             for item in self.__listDataInfo:
+                item.idDocumentValue = 0
                 for param in params:
-                    trainingData = TrainingData()
+                    prepareTrainingData = PrepareTrainingData(param)
+                    item.trainingData = prepareTrainingData.Data()
 
-                    #popler pdf to image
-                    trainingData.pplDpi = param[0]
-                    trainingData.pplTransparent = param[1]
-                    trainingData.pplGrayscale = param[2]
-
-                    #openCV
-                    trainingData.cvEqualizeHist = param[3]
-                    trainingData.cvNormalize = param[4]
-
-                    #tesseract
-                    trainingData.tssDpi = param[5]
-                    trainingData.tssOem = param[6]
-                    trainingData.tssPsm = param[7]
-
-                    item.trainingData = trainingData
                     self.__Execute(item)
 
-                    if cycle % 10 == 0:
+                    if cycle % 5 == 0:
                         PrintLog('Processed ' + str(cycle) + ' cycles in Thread Process ' + str(self.__threadID), True)
                     cycle += 1
 
                     PrintLog('Processed ' + item.nameDocument + ' in Thread Process ' + str(self.__threadID))
 
-            self.__saveDocuments.Save()
+                    abort = self.__config.Abort()
+                    
+                    if abort or (cycle % self.__config.SaveCicle() == 0):
+                        self.__saveDocuments.Save()
+                        PrintLog('Thread Process ' + str(self.__threadID) + ' data saved ' + str(cycle) + ' cycles...', True)
+
+                    if abort:
+                        PrintLog('Thread Process ' + str(self.__threadID) + ' aborting with ' + str(cycle) + ' cycles...', True)
+                        break
+
+                if abort:
+                    PrintLog('Thread Process ' + str(self.__threadID) + ' aborted with ' + str(cycle) + ' cycles!', True)
+                    break
 
             PrintLog('Thread Process ' + str(self.__threadID) + ' finished!', True)
 
@@ -108,8 +110,13 @@ class ThreadProcess(Thread):
         self.__prepareText.Convert(item.listText)
         PrintLog('End prepare text output in Thread ' + str(self.__threadID) + '!')
 
-        PrintLog('Begin save document in Thread ' + str(self.__threadID) + '!')        
-        #self.__saveDocuments.AddDocumentValue(item.idDocument, idDocValue, idClass, self.__prepareText.date)
-        #self.__saveDocuments.AddDocumentValue(item.idDocument, idDocValue, idClass, self.__prepareText.registration)
-        #self.__saveDocuments.AddDocumentValue(item.idDocument, idDocValue, idClass, self.__prepareText.value)
-        PrintLog('End save document in Thread ' + str(self.__threadID) + '!')
+        PrintLog('Begin save document value in Thread ' + str(self.__threadID) + '!')
+        item.idDocumentValue += 1
+        self.__saveDocuments.AddDocumentValue(item.idDocument, item.idDocumentValue, consts.CLASSE_VALOR_INSCRICAO, self.__prepareText.registration)
+
+        item.idDocumentValue += 1
+        self.__saveDocuments.AddDocumentValue(item.idDocument, item.idDocumentValue, consts.CLASSE_VALOR_DATA, self.__prepareText.date)
+
+        item.idDocumentValue += 1
+        self.__saveDocuments.AddDocumentValue(item.idDocument, item.idDocumentValue, consts.CLASSE_VALOR_VALOR, self.__prepareText.value)
+        PrintLog('End save document value in Thread ' + str(self.__threadID) + '!')

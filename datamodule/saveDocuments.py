@@ -15,20 +15,23 @@ class SaveDocuments:
         self.__blockCommand = BlockCommand(self.__con)
 
     def AddDocument(self, file: bytes, name: str, id: int):
-
         query = sc.SC_INSERTDOCUMENTO
         args = self.__GetArgs(file, name, id)
 
         self.__blockCommand.AddCommand(query, args)
 
-    def AddDocumentValue(self, idDoc: int, idDocValue: int, idClass: int, value: str):
+    def AddDocumentValue(self, idDoc: int, idDocValue: int, idClass: int, value: bytes):
+        query = sc.SC_DELETEDOCUMENTOVALOR
+        args = (idDoc, idDocValue)
+        self.__blockCommand.AddCommand(query, args)
+
         query = sc.SC_INSERTDOCUMENTOVALOR
-        args = (idDoc, idDocValue, idClass, value)
+        docBinary = psycopg2.Binary(value)
+        args = (idDoc, idDocValue, idClass, docBinary)
 
         self.__blockCommand.AddCommand(query, args)
 
     def AddAnswer(self, idDoc: int, idAns: int):
-
         query = sc.SC_INSERTGABARITO
         args = (idAns, idDoc)
 

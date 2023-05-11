@@ -52,7 +52,7 @@ class PrepareInit:
         cursor.execute(sc.SE_SEQGABARITO)
 
     def __FixedValues(self, cursor):
-        cursor.execute(sr.SC_INSERTCLASSEVALOR, (utl.CLASSE_VALOR_DATA, 'data')) 
+        cursor.execute(sr.SC_INSERTCLASSEVALOR, (utl.CLASSE_VALOR_DATA, 'data'))
         cursor.execute(sr.SC_INSERTCLASSEVALOR, (utl.CLASSE_VALOR_INSCRICAO, 'inscricao'))
         cursor.execute(sr.SC_INSERTCLASSEVALOR, (utl.CLASSE_VALOR_VALOR, 'valor'))
 

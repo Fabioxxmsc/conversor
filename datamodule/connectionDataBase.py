@@ -1,6 +1,6 @@
 import psycopg2
+from psycopg2.extensions import cursor
 from config.config import Config
-
 
 class ConnectionDataBase:
     __connection = None
@@ -37,16 +37,16 @@ class ConnectionDataBase:
     def NextSequence(self, sequence, count=1) -> list:
         seq = []
         conn = self.Connection()
-        cursor = conn.cursor()
+        cur: cursor = conn.cursor()
         try:
             query = 'select nextval(%s) from generate_series(1, %s)'
             args = (str(sequence), count)
 
-            cursor.execute(query, args)
+            cur.execute(query, args)
             conn.commit()
 
-            if cursor.rowcount > 0:
-                items = cursor.fetchall()
+            if cur.rowcount > 0:
+                items = cur.fetchall()
                 if len(items) > 0:
                     for item in items:
                         seq.append(item[0])
@@ -63,9 +63,9 @@ class ConnectionDataBase:
             raise
 
         finally:
-            if cursor is not None:
-                if not cursor.closed:
-                    cursor.close()
+            if cur is not None:
+                if not cur.closed:
+                    cur.close()
 
     def Close(self):
         if self.__connection is not None:

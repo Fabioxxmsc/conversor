@@ -11,6 +11,7 @@ from datamodule.dataInfo import DataInfo
 from config.config import Config
 import utils.consts as consts
 import itertools
+import gc
 
 class ThreadProcess(Thread):
     __threadID = None
@@ -58,10 +59,15 @@ class ThreadProcess(Thread):
             cycles = len(params)
             cycle = 1
 
+            print(type(params))
             PrintLog('Thread Process ' + str(self.__threadID) + ' started with ' + str(cycles) + ' cycles!', True)
-            for item in self.__listDataInfo:
+            index = len(self.__listDataInfo) - 1
+            while index >= 0:
+                item = self.__listDataInfo[index]
+
                 item.idDocumentValue = 0
                 for param in params:
+                    print(type(param))
                     prepareTrainingData = PrepareTrainingData(param)
                     item.trainingData = prepareTrainingData.Data()
 
@@ -69,12 +75,11 @@ class ThreadProcess(Thread):
 
                     if cycle % 5 == 0:
                         PrintLog('Processed ' + str(cycle) + ' cycles in Thread Process ' + str(self.__threadID), True)
-                    cycle += 1
 
                     PrintLog('Processed ' + item.nameDocument + ' in Thread Process ' + str(self.__threadID))
 
                     abort = self.__config.Abort()
-                    
+
                     if abort or (cycle % self.__config.SaveCicle() == 0):
                         self.__saveDocuments.Save()
                         PrintLog('Thread Process ' + str(self.__threadID) + ' data saved ' + str(cycle) + ' cycles...', True)
@@ -82,6 +87,13 @@ class ThreadProcess(Thread):
                     if abort:
                         PrintLog('Thread Process ' + str(self.__threadID) + ' aborting with ' + str(cycle) + ' cycles...', True)
                         break
+
+                    cycle += 1
+
+                PrintLog('Thread Process ' + str(self.__threadID) + ' removing item ' + str(index) + '!', True)
+                del self.__listDataInfo[index]
+                gc.collect() #Garbage Collector
+                index -= 1
 
                 if abort:
                     PrintLog('Thread Process ' + str(self.__threadID) + ' aborted with ' + str(cycle) + ' cycles!', True)

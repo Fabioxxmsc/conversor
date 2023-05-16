@@ -14,14 +14,11 @@ class ConvertImageToTxt():
         PrintLog('Tesseract OCR version ' + str(pytesseract.get_tesseract_version()), True)
 
     def Convert(self, item: DataInfo):
-
         for img in item.listImage:
             texto = self.__Execute(img, item.trainingData)
             item.listText.append(texto)
 
     def __Execute(self, file: Image, trainingData: TrainingData):
-        trainingData.tssOem = 3
-        trainingData.tssPsm = 3
         aimage = Image.frombytes(file.mode, file.size, file.tobytes())
         customConfig = self.__CustomConfig(trainingData)
         text_from_image = pytesseract.image_to_string(aimage, 

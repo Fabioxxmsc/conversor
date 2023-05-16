@@ -6,9 +6,7 @@ from process.controlThreadProcess import ControlThreadProcess
 from datamodule.connectionDataBase import ConnectionDataBase
 from crud.prepareInit import PrepareInit
 
-
 def main():
-
     prepare = PrepareInit(ConnectionDataBase())
     prepare.Execute()
 

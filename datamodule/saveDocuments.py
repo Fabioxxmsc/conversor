@@ -5,8 +5,7 @@ import crud.scriptCrud as sc
 import hashlib
 import psycopg2
 
-
-class SaveDocuments:
+class SaveDocuments():
     __con: ConnectionDataBase = None
     __blockCommand: BlockCommand = None
 

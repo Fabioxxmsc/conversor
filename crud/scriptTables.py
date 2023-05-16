@@ -53,3 +53,31 @@ ST_GABARITOVALOR = ('create table if not exists gabaritovalor ('
                     ')')
 
 ST_DROPGABARITOVALOR = 'drop table if exists gabaritovalor'
+
+#----------------------------------------------------------------
+ST_COMBINACOES = ('create table if not exists combinacoes ('
+                  'idcombinacoes int4 not null'
+                  ', pplDpi varchar(5)'
+                  ', pplTransparent varchar(5)'
+                  ', pplGrayscale varchar(5)'
+                  ', cvEqualizeHist varchar(5)'
+                  ', cvNormalize varchar(5)'
+                  ', tssDpi varchar(5)'
+                  ', tssOem varchar(5)'
+                  ', tssPsm varchar(5)'
+                  ', constraint pkcombinacoes primary key (idcombinacoes)'
+                  ')')
+
+ST_DROPCOMBINACOES = 'drop table if exists combinacoes'
+
+#----------------------------------------------------------------
+ST_COMBINACOESDOCUMENTO = ('create table if not exists combinacoesdocumento ('
+                           'iddocumento int4 not null'
+                           ', idcombinacoes int4 not null'
+                           ', status smallint not null'
+                           ', constraint pkcombinacoesdocumento primary key (iddocumento, idcombinacoes)'
+                           ', constraint fkcombinacoesdocumentodoc foreign key (iddocumento) references documento (iddocumento)'
+                           ', constraint fkcombinacoesdocumentocom foreign key (idcombinacoes) references combinacoes (idcombinacoes)'
+                           ')')
+
+ST_DROPCOMBINACOESDOCUMENTO = 'drop table if exists combinacoesdocumento'

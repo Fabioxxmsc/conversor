@@ -8,3 +8,8 @@ SC_DELETEDOCUMENTOVALOR = 'delete from documentovalor dv where dv.iddocumento = 
 SC_INSERTGABARITO = 'insert into gabarito (idgabarito, iddocumento) values (%s, %s)'
 
 SC_INSERTGABARITOVALOR = 'insert into gabaritovalor (idgabarito, idgabaritovalor, idclasse, valor) values (%s, %s, %s, %s)'
+
+SC_INSERTCOMBINACOES = 'insert into combinacoes (idcombinacoes, pplDpi, pplTransparent, pplGrayscale, cvEqualizeHist, cvNormalize, tssDpi, tssOem, tssPsm) values (%s, %s, %s, %s, %s, %s, %s, %s, %s)'
+
+SC_INSERTCOMBINACOESDOCUMENTO = 'insert into combinacoesdocumento (iddocumento, idcombinacoes, status) values (%s, %s, %s)'
+SC_DELETECOMBINACOESDOCUMENTO = 'delete from combinacoesdocumento cd where cd.iddocumento = %s and cd.idcombinacoes = %s'

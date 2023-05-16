@@ -1,11 +1,13 @@
 from datamodule.connectionDataBase import ConnectionDataBase
+from datamodule.blockCommand import BlockCommand
 from config.config import Config
+from process.parameters import Parameters
+from psycopg2.extensions import cursor
 import psycopg2
 import crud.scriptSequences as sc
 import crud.scriptTables as st
 import crud.scriptCrud as sr
 import utils.consts as utl
-
 
 class PrepareInit:
     __conn: ConnectionDataBase = None
@@ -20,13 +22,12 @@ class PrepareInit:
             self.DropAll()
 
         connection = self.__conn.Connection()
-
-        cursor = connection.cursor()
+        cur: cursor = connection.cursor()
         try:
-            self.__CreateSequences(cursor)
-            self.__CreateTables(cursor)
+            self.__CreateSequences(cur)
+            self.__CreateTables(cur)
 
-            self.__FixedValues(cursor)
+            self.__FixedValues(cur)
 
             connection.commit()
         except (Exception, psycopg2.DatabaseError) as error:
@@ -35,41 +36,55 @@ class PrepareInit:
             raise
 
         finally:
-            if cursor is not None:
-                if not cursor.closed:
-                    cursor.close()
+            if cur is not None:
+                if not cur.closed:
+                    cur.close()
 
-    def __CreateTables(self, cursor):
-        cursor.execute(st.ST_CLASSEVALOR)
-        cursor.execute(st.ST_DOCUMENTO)
-        cursor.execute(st.ST_DOCUMENTOVALOR)
-        cursor.execute(st.ST_GABARITO)
-        cursor.execute(st.ST_GABARITOVALOR)
+        self.__FixedValuesCombinations()
 
-    def __CreateSequences(self, cursor):
-        cursor.execute(sc.SE_SEQCLASSEVALOR)
-        cursor.execute(sc.SE_SEQDOCUMENTO)
-        cursor.execute(sc.SE_SEQGABARITO)
+    def __CreateTables(self, cur: cursor):
+        cur.execute(st.ST_CLASSEVALOR)
+        cur.execute(st.ST_DOCUMENTO)
+        cur.execute(st.ST_DOCUMENTOVALOR)
+        cur.execute(st.ST_GABARITO)
+        cur.execute(st.ST_GABARITOVALOR)
+        cur.execute(st.ST_COMBINACOES)
+        cur.execute(st.ST_COMBINACOESDOCUMENTO)
 
-    def __FixedValues(self, cursor):
-        cursor.execute(sr.SC_INSERTCLASSEVALOR, (utl.CLASSE_VALOR_DATA, 'data'))
-        cursor.execute(sr.SC_INSERTCLASSEVALOR, (utl.CLASSE_VALOR_INSCRICAO, 'inscricao'))
-        cursor.execute(sr.SC_INSERTCLASSEVALOR, (utl.CLASSE_VALOR_VALOR, 'valor'))
+    def __CreateSequences(self, cur: cursor):
+        cur.execute(sc.SE_SEQCLASSEVALOR)
+        cur.execute(sc.SE_SEQDOCUMENTO)
+        cur.execute(sc.SE_SEQGABARITO)
+
+    def __FixedValues(self, cur: cursor):
+        cur.execute(sr.SC_INSERTCLASSEVALOR, (utl.CLASSE_VALOR_DATA, 'data'))
+        cur.execute(sr.SC_INSERTCLASSEVALOR, (utl.CLASSE_VALOR_INSCRICAO, 'inscricao'))
+        cur.execute(sr.SC_INSERTCLASSEVALOR, (utl.CLASSE_VALOR_VALOR, 'valor'))
+
+    def __FixedValuesCombinations(self):
+        block = BlockCommand(self.__conn)
+        params = Parameters()
+        for indice, item in enumerate(params.Params()):
+            newParams = (indice + 1,) + item
+            block.AddCommand(sr.SC_INSERTCOMBINACOES, newParams)
+        block.Execute()
 
     def DropAll(self):
         connection = self.__conn.Connection()
 
-        cursor = connection.cursor()
+        cur: cursor = connection.cursor()
         try:
-            cursor.execute(st.ST_DROPGABARITOVALOR)
-            cursor.execute(st.ST_DROPGABARITO)
-            cursor.execute(st.ST_DROPDOCUMENTOVALOR)
-            cursor.execute(st.ST_DROPDOCUMENTO)
-            cursor.execute(st.ST_DROPCLASSEVALOR)
+            cur.execute(st.ST_DROPGABARITOVALOR)
+            cur.execute(st.ST_DROPGABARITO)
+            cur.execute(st.ST_DROPCOMBINACOESDOCUMENTO)
+            cur.execute(st.ST_DROPCOMBINACOES)
+            cur.execute(st.ST_DROPDOCUMENTOVALOR)
+            cur.execute(st.ST_DROPDOCUMENTO)
+            cur.execute(st.ST_DROPCLASSEVALOR)
 
-            cursor.execute(sc.SE_DROPSEQGABARITO)
-            cursor.execute(sc.SE_DROPSEQDOCUMENTO)
-            cursor.execute(sc.SE_DROPSEQCLASSEVALOR)
+            cur.execute(sc.SE_DROPSEQGABARITO)
+            cur.execute(sc.SE_DROPSEQDOCUMENTO)
+            cur.execute(sc.SE_DROPSEQCLASSEVALOR)
 
             connection.commit()
         except (Exception, psycopg2.DatabaseError) as error:
@@ -78,6 +93,6 @@ class PrepareInit:
             raise
 
         finally:
-            if cursor is not None:
-                if not cursor.closed:
-                    cursor.close()
+            if cur is not None:
+                if not cur.closed:
+                    cur.close()

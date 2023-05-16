@@ -1,7 +1,6 @@
 from datamodule.connectionDataBase import ConnectionDataBase
 import psycopg2
 
-
 class BlockCommand():
     __objConnection: ConnectionDataBase = None
     __listCommand: list[str]

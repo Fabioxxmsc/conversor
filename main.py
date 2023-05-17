@@ -22,12 +22,13 @@ def main():
 
     countThread = GetCountThread(listDir, config.TesseractThreads())
 
-    timeStart = time.time()
-    ctrlThreadIns = ControlThreadInsert(countThread, pathDatset)
-    ctrlThreadIns.Execute()
-    print('Time:', time.time() - timeStart)
+    if config.DropAll():
+        timeStart = time.time()
+        ctrlThreadIns = ControlThreadInsert(countThread, pathDatset)
+        ctrlThreadIns.Execute()
+        print('Time:', time.time() - timeStart)
 
-    time.sleep(2)
+        time.sleep(2)
 
     timeStart = time.time()
     ctrlThreadPro = ControlThreadProcess(countThread)

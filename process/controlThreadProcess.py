@@ -2,6 +2,7 @@ from process.threadProcess import ThreadProcess
 from datamodule.connectionDataBase import ConnectionDataBase
 from datamodule.dataInfo import DataInfo
 from datamodule.dataInfoDetail import DataInfoDetail
+from config.config import Config
 import crud.scriptQuerys as sq
 import psycopg2
 from psycopg2.extras import RealDictCursor
@@ -11,15 +12,17 @@ class ControlThreadProcess:
     __countThread: int
     __listThreads: list[ThreadProcess]
     __dicInfo: dict[int, DataInfo]
+    __config: Config = None
 
     def __init__(self, countThread: int):
         self.__countThread = countThread
         self.__listThreads = []
         self.__dicInfo = {}
+        self.__config = Config()
 
     def Execute(self):
         self.__PrepareDicInfo()
-        self.__AddListThread()            
+        self.__AddListThread()
         self.__AddItemListThread()
         self.__RunThread()
         self.__WaitThread()
@@ -30,7 +33,11 @@ class ControlThreadProcess:
 
         cursor = conn.cursor(cursor_factory=RealDictCursor)
         try:
-            cursor.execute(sq.SQ_SELECT_DOC_ALL)            
+            if self.__config.DropAll():
+                cursor.execute(sq.SQ_SELECT_DOC_ALL)
+            else:
+                cursor.execute(sq.SQ_SELECT_DOC_FILTER)
+                
             data = cursor.fetchall()
 
             for row in data:

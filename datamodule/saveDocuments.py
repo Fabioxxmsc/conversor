@@ -2,6 +2,7 @@ from datamodule.connectionDataBase import ConnectionDataBase
 from datamodule.blockCommand import BlockCommand
 from datamodule.dataInfo import DataInfo
 import crud.scriptCrud as sc
+import utils.enums as enms
 import hashlib
 import psycopg2
 
@@ -34,11 +35,17 @@ class SaveDocuments():
         query = sc.SC_INSERTGABARITO
         args = (idAns, idDoc)
 
-        self.__blockCommand.AddCommand(query, args)    
+        self.__blockCommand.AddCommand(query, args)
 
     def AddAnswerValue(self, idAns: int, idClass: int, value: str):
         query = sc.SC_INSERTGABARITOVALOR
         args = (idAns, idClass, idClass, value)
+
+        self.__blockCommand.AddCommand(query, args)
+
+    def AddCombinationDocument(self, idDoc: int, idComb: int):
+        query = sc.SC_INSERTCOMBINACOESDOCUMENTO
+        args = (idDoc, idComb, enms.SimNao.SIM.value)
 
         self.__blockCommand.AddCommand(query, args)
 

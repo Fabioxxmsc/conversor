@@ -132,3 +132,5 @@ class ThreadProcess(Thread):
         item.idDocumentValue += 1
         self.__saveDocuments.AddDocumentValue(item.idDocument, item.idDocumentValue, consts.CLASSE_VALOR_VALOR, self.__prepareText.value)
         PrintLog('End save document value in Thread ' + str(self.__threadID) + '!')
+
+        self.__saveDocuments.AddCombinationDocument(item.idDocument, item.idDocumentValue)

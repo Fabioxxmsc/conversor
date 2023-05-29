@@ -3,6 +3,7 @@ from datamodule.blockCommand import BlockCommand
 from datamodule.dataInfo import DataInfo
 import crud.scriptCrud as sc
 import utils.enums as enms
+from datetime import datetime
 import hashlib
 import psycopg2
 
@@ -20,14 +21,15 @@ class SaveDocuments():
 
         self.__blockCommand.AddCommand(query, args)
 
-    def AddDocumentValue(self, idDoc: int, idDocValue: int, idClass: int, value: bytes):
+    def AddDocumentValue(self, idDoc: int, idDocValue: int, idComb: int, idClass: int, value: bytes):
         query = sc.SC_DELETEDOCUMENTOVALOR
         args = (idDoc, idDocValue)
+        
         self.__blockCommand.AddCommand(query, args)
 
         query = sc.SC_INSERTDOCUMENTOVALOR
         docBinary = psycopg2.Binary(value)
-        args = (idDoc, idDocValue, idClass, docBinary)
+        args = (idDoc, idDocValue, idComb, idClass, docBinary)
 
         self.__blockCommand.AddCommand(query, args)
 
@@ -43,9 +45,9 @@ class SaveDocuments():
 
         self.__blockCommand.AddCommand(query, args)
 
-    def AddCombinationDocument(self, idDoc: int, idComb: int):
+    def AddCombinationDocument(self, idDoc: int, idComb: int, duration: datetime):
         query = sc.SC_INSERTCOMBINACOESDOCUMENTO
-        args = (idDoc, idComb, enms.SimNao.SIM.value)
+        args = (idDoc, idComb, enms.SimNao.SIM.value, duration)
 
         self.__blockCommand.AddCommand(query, args)
 

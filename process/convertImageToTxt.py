@@ -21,11 +21,9 @@ class ConvertImageToTxt():
     def __Execute(self, file: Image, trainingData: TrainingData):
         aimage = Image.frombytes(file.mode, file.size, file.tobytes())
         customConfig = self.__CustomConfig(trainingData)
-        text_from_image = pytesseract.image_to_string(aimage, 
-                                                    lang=trainingData.tssLang,
-                                                    config=customConfig,
-                                                    output_type=pytesseract.Output.STRING)
+        text_from_image = pytesseract.image_to_string(aimage, lang=trainingData.tssLang, config=customConfig, output_type=pytesseract.Output.STRING)
         return text_from_image
 
     def __CustomConfig(self, trainingData: TrainingData):
-        return r'--dpi {} --oem {} --psm {}'.format(str(trainingData.tssDpi), str(trainingData.tssOem), str(trainingData.tssPsm))
+        customConfig = r'--dpi {} --oem {} --psm {}'.format(str(trainingData.tssDpi), str(trainingData.tssOem), str(trainingData.tssPsm))
+        return customConfig

@@ -17,7 +17,7 @@ ARGS_TESSERACT_PSM = (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13)
 
 #https://github.com/tesseract-ocr/tesseract/blob/main/doc/tesseract.1.asc
 
-#Tesseract PSM
+#Tesseract PSM (Page Segmentation Mode)
 #Set Tesseract to only run a subset of layout analysis and assume a certain form of image. The options for N are:
 TSS_PSM_00 = 0  # Orientation and script detection (OSD) only.
 TSS_PSM_01 = 1  # Automatic page segmentation with OSD.
@@ -34,7 +34,7 @@ TSS_PSM_11 = 11 # Sparse text. Find as much text as possible in no particular or
 TSS_PSM_12 = 12 # Sparse text with OSD.
 TSS_PSM_13 = 13 # Raw line. Treat the image as a single text line, bypassing hacks that are Tesseract-specific.
 
-#Tesseract OEM
+#Tesseract OEM (OCR Engine Mode)
 #Specify OCR Engine mode. The options for N are
 TSS_OEM_00 = 0  # Original Tesseract only.
 TSS_OEM_01 = 1  # Neural nets LSTM only.

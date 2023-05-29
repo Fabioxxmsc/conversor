@@ -1,6 +1,7 @@
 import utils.consts as consts
 
 class TrainingData:
+    __idCombination: int
     __ppl_dpi: int
     __ppl_thread: int
     __ppl_transparent: bool
@@ -13,16 +14,25 @@ class TrainingData:
     __cv_normalize: bool
 
     def __init__(self):
+        self.__idCombination = 0
         self.__ppl_dpi = 200
         self.__ppl_thread = 1
         self.__ppl_transparent = False
         self.__ppl_grayscale = False
         self.__tss_dpi = 300
-        self.__tss_lang = 'eng+por'
+        self.__tss_lang = 'por'
         self.__tss_psm = consts.TSS_PSM_03
         self.__tss_oem = consts.TSS_OEM_03
         self.__cv_equalizeHist = False
         self.__cv_normalize = False
+
+    @property
+    def idCombination(self) -> int:
+        return self.__idCombination
+
+    @idCombination.setter
+    def idCombination(self, value: int):
+        self.__idCombination = value
 
     @property
     def pplDpi(self) -> int:

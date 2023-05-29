@@ -9,8 +9,10 @@ from datamodule.connectionDataBase import ConnectionDataBase
 from datamodule.saveDocuments import SaveDocuments
 from datamodule.dataInfo import DataInfo
 from config.config import Config
+from psycopg2.extras import RealDictCursor
+from datetime import datetime, timedelta
+import crud.scriptQuerys as SQ
 import utils.consts as consts
-import itertools
 import gc
 
 class ThreadProcess(Thread):
@@ -46,32 +48,28 @@ class ThreadProcess(Thread):
 
         else:
             PrintLog('Thread Process ' + str(self.__threadID) + ' started with ' + str(count) + ' items!', True)
-
-            params = list(itertools.product(consts.ARGS_PDF2IMAGE_DPI, 
-                                            consts.ARGS_PDF2IMAGE_TRANSP, 
-                                            consts.ARGS_PDF2IMAGE_GRAYSC, 
-                                            consts.ARGS_OPENCV_EQUALIZEHIST, 
-                                            consts.ARGS_OPENCV_NORMALIZE, 
-                                            consts.ARGS_TESSERACT_DPI, 
-                                            consts.ARGS_TESSERACT_OEM, 
-                                            consts.ARGS_TESSERACT_PSM))
-
-            cycles = len(params)
-            cycle = 1
-
-            print(type(params))
-            PrintLog('Thread Process ' + str(self.__threadID) + ' started with ' + str(cycles) + ' cycles!', True)
-            index = len(self.__listDataInfo) - 1
+                        
+            index = len(self.__listDataInfo) - 1            
             while index >= 0:
                 item = self.__listDataInfo[index]
-
                 item.idDocumentValue = 0
+
+                if self.__config.DropAll():
+                    params = self.__LoadParams()
+                else:
+                    params = self.__LoadParams(item.idDocument)
+
+                cycles = len(params)
+                cycle = 1
+            
+                PrintLog('Thread Process ' + str(self.__threadID) + ' started with ' + str(cycles) + ' cycles!', True)
+
                 for param in params:
-                    print(type(param))
+                    dateTimeInit = datetime.now()
                     prepareTrainingData = PrepareTrainingData(param)
                     item.trainingData = prepareTrainingData.Data()
 
-                    self.__Execute(item)
+                    self.__Execute(item, dateTimeInit)
 
                     if cycle % 5 == 0:
                         PrintLog('Processed ' + str(cycle) + ' cycles in Thread Process ' + str(self.__threadID), True)
@@ -105,7 +103,31 @@ class ThreadProcess(Thread):
         self.__listDataInfo.append(item)
         PrintLog('Item ' + item.nameDocument + ' add in Thread Process ' + str(self.__threadID) + '!')
 
-    def __Execute(self, item: DataInfo):
+    def __LoadParams(self, idDocument: int = None) -> list:
+        conn = self.__con.Connection()
+        conn.autocommit = False
+
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
+        try:
+            if idDocument is None:
+                cursor.execute(SQ.SQ_SELECT_COMB)
+            else:
+                cursor.execute(SQ.SQ_SELECT_COMB_FILTER, (idDocument,))
+
+            data = cursor.fetchall()            
+            conn.commit()
+
+            return data
+        except Exception as error:
+            conn.rollback()
+            print('error load data in __LoadParamsAll!', error)
+            raise
+        finally:
+            if cursor is not None:
+                if not cursor.closed:
+                    cursor.close()
+
+    def __Execute(self, item: DataInfo, dateTimeInit: datetime):
         PrintLog('Begin convert pdf to image in Thread ' + str(self.__threadID) + '!')
         self.__pdfToImage.Convert(item)
         PrintLog('End convert pdf to image in Thread ' + str(self.__threadID) + '!')
@@ -124,13 +146,13 @@ class ThreadProcess(Thread):
 
         PrintLog('Begin save document value in Thread ' + str(self.__threadID) + '!')
         item.idDocumentValue += 1
-        self.__saveDocuments.AddDocumentValue(item.idDocument, item.idDocumentValue, consts.CLASSE_VALOR_INSCRICAO, self.__prepareText.registration)
+        self.__saveDocuments.AddDocumentValue(item.idDocument, item.idDocumentValue, item.trainingData.idCombination, consts.CLASSE_VALOR_INSCRICAO, self.__prepareText.registration)
 
         item.idDocumentValue += 1
-        self.__saveDocuments.AddDocumentValue(item.idDocument, item.idDocumentValue, consts.CLASSE_VALOR_DATA, self.__prepareText.date)
+        self.__saveDocuments.AddDocumentValue(item.idDocument, item.idDocumentValue, item.trainingData.idCombination, consts.CLASSE_VALOR_DATA, self.__prepareText.date)
 
         item.idDocumentValue += 1
-        self.__saveDocuments.AddDocumentValue(item.idDocument, item.idDocumentValue, consts.CLASSE_VALOR_VALOR, self.__prepareText.value)
+        self.__saveDocuments.AddDocumentValue(item.idDocument, item.idDocumentValue, item.trainingData.idCombination, consts.CLASSE_VALOR_VALOR, self.__prepareText.value)
         PrintLog('End save document value in Thread ' + str(self.__threadID) + '!')
 
-        self.__saveDocuments.AddCombinationDocument(item.idDocument, item.idDocumentValue)
+        self.__saveDocuments.AddCombinationDocument(item.idDocument, item.trainingData.idCombination, datetime.now() - dateTimeInit)

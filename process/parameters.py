@@ -25,7 +25,9 @@ class Parameters():
         return consts.ARGS_PDF2IMAGE_GRAYSC
 
     def __OpenCvEqualizeHist(self) -> tuple:
-        return consts.ARGS_OPENCV_EQUALIZEHIST[1:]
+        lista = list(consts.ARGS_OPENCV_EQUALIZEHIST)
+        lista.remove(True)        
+        return tuple(lista)
 
     def __OpenCvNormalize(self) -> tuple:
         return consts.ARGS_OPENCV_NORMALIZE
@@ -34,7 +36,13 @@ class Parameters():
         return consts.ARGS_TESSERACT_DPI
 
     def __TesseractOem(self) -> tuple:
-        return consts.ARGS_TESSERACT_OEM
+        lista = list(consts.ARGS_TESSERACT_OEM)
+        lista.remove(consts.TSS_OEM_00)
+        lista.remove(consts.TSS_OEM_02)
+        return tuple(lista)
 
     def __TesseractPsm(self) -> tuple:
-        return consts.ARGS_TESSERACT_PSM
+        lista = list(consts.ARGS_TESSERACT_PSM)
+        lista.remove(consts.TSS_PSM_00)
+        lista.remove(consts.TSS_PSM_02)
+        return tuple(lista)

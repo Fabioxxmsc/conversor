@@ -13,12 +13,14 @@ class ControlThreadProcess:
     __listThreads: list[ThreadProcess]
     __dicInfo: dict[int, DataInfo]
     __config: Config = None
+    __dropAll: bool = False
 
     def __init__(self, countThread: int):
         self.__countThread = countThread
         self.__listThreads = []
         self.__dicInfo = {}
         self.__config = Config()
+        self.__dropAll = self.__config.DropAll()
 
     def Execute(self):
         self.__PrepareDicInfo()
@@ -30,10 +32,11 @@ class ControlThreadProcess:
     def __PrepareDicInfo(self):
         connBase = ConnectionDataBase()
         conn = connBase.Connection()
-
+        conn.autocommit = False
+        
         cursor = conn.cursor(cursor_factory=RealDictCursor)
         try:
-            if self.__config.DropAll():
+            if self.__dropAll:
                 cursor.execute(sq.SQ_SELECT_DOC_ALL)
             else:
                 cursor.execute(sq.SQ_SELECT_DOC_FILTER)
@@ -50,7 +53,11 @@ class ControlThreadProcess:
 
                 self.__dicInfo[dataInfo.idAnswer] = dataInfo
 
-            cursor.execute(sq.SQ_SELECT_DOCVAL_ALL)
+            if self.__dropAll:
+                cursor.execute(sq.SQ_SELECT_GABVAL_ALL)
+            else:
+                cursor.execute(sq.SQ_SELECT_GABVAL_FILTER)
+
             data = cursor.fetchall()
 
             for row in data:

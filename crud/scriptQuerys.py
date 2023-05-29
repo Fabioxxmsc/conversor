@@ -25,7 +25,7 @@ SQ_SELECT_DOC_FILTER = ('select doc.iddocumento'
                              ', doc.hash'
                              ', gab.idgabarito')
 
-SQ_SELECT_DOCVAL_ALL = ('select gabv.idgabarito'
+SQ_SELECT_GABVAL_ALL = ('select gabv.idgabarito'
                              ', gabv.idgabaritovalor'
                              ', gabv.idclasse'
                              ', gabv.valor'
@@ -35,6 +35,22 @@ SQ_SELECT_DOCVAL_ALL = ('select gabv.idgabarito'
                             'on cv.idclasse = gabv.idclasse '
                       'order by gabv.idgabarito'
                              ', gabv.idgabaritovalor')
+
+SQ_SELECT_GABVAL_FILTER = ('select gab.idgabarito'
+                                ', gabv.idgabaritovalor'
+                                ', gabv.idclasse'
+                                ', gabv.valor'
+                                ', cv.nome '
+                             'from gabarito gab '
+                             'join gabaritovalor gabv '
+                               'on gabv.idgabarito = gab.idgabarito '
+                             'join classevalor cv '
+                               'on cv.idclasse = gabv.idclasse '
+                        'left join combinacoesdocumento cd '
+                               'on cd.iddocumento = gab.iddocumento '
+                            'where cd.iddocumento is null '
+                         'order by gab.idgabarito'
+                                ', gabv.idgabaritovalor')
 
 SQ_SELECT_COMB = ('select c.idcombinacoes'
                        ', c.ppldpi'

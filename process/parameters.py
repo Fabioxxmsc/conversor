@@ -16,7 +16,10 @@ class Parameters():
                                       self.__TesseractPsm()))
 
     def __Pdf2ImageDpi(self) -> tuple:
-        return consts.ARGS_PDF2IMAGE_DPI
+        lista = list(consts.ARGS_PDF2IMAGE_DPI)
+        lista.remove(200)
+        lista.remove(1200)
+        return tuple(lista)
 
     def __Pdf2ImageTransp(self) -> tuple:
         return consts.ARGS_PDF2IMAGE_TRANSP
@@ -33,7 +36,10 @@ class Parameters():
         return consts.ARGS_OPENCV_NORMALIZE
 
     def __TesseractDpi(self) -> tuple:
-        return consts.ARGS_TESSERACT_DPI
+        lista = list(consts.ARGS_TESSERACT_DPI)
+        lista.remove(200)
+        lista.remove(1200)
+        return tuple(lista)
 
     def __TesseractOem(self) -> tuple:
         lista = list(consts.ARGS_TESSERACT_OEM)

@@ -87,12 +87,14 @@ class ThreadProcess(Thread):
                         break
 
                     cycle += 1
+                    gc.collect() #Garbage Collector
 
                 PrintLog('Thread Process ' + str(self.__threadID) + ' removing item ' + str(index) + '!', True)
                 del self.__listDataInfo[index]
                 gc.collect() #Garbage Collector
                 index -= 1
 
+                break
                 if abort:
                     PrintLog('Thread Process ' + str(self.__threadID) + ' aborted with ' + str(cycle) + ' cycles!', True)
                     break

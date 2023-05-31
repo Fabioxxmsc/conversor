@@ -15,7 +15,10 @@ class ConvertPdfToImage():
         self.__usePath = self.__poppler_path != ''
 
     def Convert(self, item: DataInfo):
+        self.__ClearInfo(item)
+
         images = self.__Execute(item)
+        
         for img in images:
             item.listImage.append(img)
 
@@ -40,3 +43,6 @@ class ConvertPdfToImage():
                 raise exceptions.PDFInfoNotInstalledError
                 
         return images
+
+    def __ClearInfo(self, item: DataInfo):
+        item.listImage = []

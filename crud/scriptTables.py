@@ -84,3 +84,19 @@ ST_COMBINACOESDOCUMENTO = ('create table if not exists combinacoesdocumento ('
                            ')')
 
 ST_DROPCOMBINACOESDOCUMENTO = 'drop table if exists combinacoesdocumento'
+
+#----------------------------------------------------------------
+ST_ESTATISTICA = ('create table if not exists estatistica ('
+                  'iddocumento int4 not null'
+                  ', idgabarito int4 not null'
+                  ', idgabaritovalor int4 not null'
+                  ', idcombinacoes int4 not null'
+                  ', acerto numeric(6, 4) not null'
+                  ', constraint pkestatistica primary key (iddocumento, idgabarito, idgabaritovalor, idcombinacoes)'
+                  ', constraint fkestatisticadocumento foreign key (iddocumento) references documento (iddocumento)'
+                  ', constraint fkestatisticagabarito foreign key (idgabarito) references gabarito (idgabarito)'
+                  ', constraint fkestatisticagabaritovalor foreign key (idgabarito, idgabaritovalor) references gabaritovalor (idgabarito, idgabaritovalor)'
+                  ', constraint fkestatisticacombinacoes foreign key (idcombinacoes) references combinacoes (idcombinacoes)'
+                  ')')
+
+ST_DROPESTATISTICA = 'drop table if exists estatistica'

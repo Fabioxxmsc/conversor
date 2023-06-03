@@ -1,5 +1,7 @@
 DELIMITER = '*;*'
 
+LIST_CARACTER = ['.', ',', '-', '/', '\\', '(', ')', ' ', '\n', '\t', '\r', '\f', '\v', '\0', '\a', '\b']
+
 CLASSE_VALOR_DATA = 1
 CLASSE_VALOR_INSCRICAO = 2
 CLASSE_VALOR_VALOR = 3

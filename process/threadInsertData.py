@@ -4,7 +4,7 @@ from message import PrintLog
 from datamodule.connectionDataBase import ConnectionDataBase
 from datamodule.saveDocuments import SaveDocuments
 import utils.consts as utl
-
+import re
 
 class ThreadInsertData(Thread):
     __threadID = None
@@ -64,18 +64,43 @@ class ThreadInsertData(Thread):
         file = open(current, 'rt')
         textData = file.read()
         file.close()
+
+        textData = textData.replace('\n', '').replace(' ', '')
+        padrao = r'data:(.*?)\n'
+        resultado = re.search(padrao, textData + '\n')
+        if resultado:
+            textData = resultado.group(1)
+
         self.__saveDocuments.AddAnswerValue(idAns, utl.CLASSE_VALOR_DATA, textData)
 
         current = os.path.join(path, r'inscricao.txt')
         file = open(current, 'rt')
         textInscri = file.read()
         file.close()
+
+        textInscri = textInscri.replace('\n', '').replace(' ', '')
+        padrao = r'inscricao:(.*?)\n'
+        resultado = re.search(padrao, textInscri + '\n')
+        if resultado:
+            textInscri = resultado.group(1)
+            resultado = re.findall(r'[\d]+', textInscri)
+            textInscri = "".join(resultado)
+
         self.__saveDocuments.AddAnswerValue(idAns, utl.CLASSE_VALOR_INSCRICAO, textInscri)
 
         current = os.path.join(path, r'valor.txt')
         file = open(current, 'rt')
         textValor = file.read()
         file.close()
+
+        textValor = textValor.replace('\n', '').replace(' ', '')
+        padrao = r'valor:(.*?)\n'
+        resultado = re.search(padrao, textValor + '\n')
+        if resultado:
+            textValor = resultado.group(1)
+            resultado = re.findall(r'[\d,]+', textValor)
+            textValor = "".join(resultado)
+
         self.__saveDocuments.AddAnswerValue(idAns, utl.CLASSE_VALOR_VALOR, textValor)
 
         PrintLog('End save answer value in Thread ' + str(self.__threadID) + '!')

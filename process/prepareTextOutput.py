@@ -11,17 +11,29 @@ class PrepareTextOutput():
         self.__ClearInfo()
 
     @property
-    def registration(self) -> bytes: #lista_de_volta = list(dataBinary.decode('utf-8').split(consts.DELIMITER))
+    def registration(self) -> list[str]:
+        return self.__registration
+
+    @property
+    def registrationB(self) -> bytes: #lista_de_volta = list(dataBinary.decode('utf-8').split(consts.DELIMITER))
         dataBinary = bytes(consts.DELIMITER.join(self.__registration), 'utf-8')
         return dataBinary
 
     @property
-    def date(self) -> bytes:
+    def date(self) -> list[str]:
+        return self.__date
+
+    @property
+    def dateB(self) -> bytes:
         dataBinary = bytes(consts.DELIMITER.join(self.__date), 'utf-8')
         return dataBinary
 
     @property
-    def value(self) -> bytes:
+    def value(self) -> list[str]:
+        return self.__value
+
+    @property
+    def valueB(self) -> bytes:
         dataBinary = bytes(consts.DELIMITER.join(self.__value), 'utf-8')
         return dataBinary
 
@@ -50,16 +62,35 @@ class PrepareTextOutput():
         pattern = r'\d{2}\.\d{3}\.\d{3}\/\d{4}\-\d{2}'
         matches = re.findall(pattern, item)
         for match in matches:
-            self.__registration.append(match)
+            if type(match) in [tuple, list]:
+                for value in match:
+                    if (value != '') and (value not in self.__registration):
+                        self.__registration.append(value)
+            elif type(match) is str:
+                if (match != '') and (match not in self.__registration):
+                    self.__registration.append(match)
 
     def __FindDate(self, item: str):
-        pattern = r'[A-Za-z]{3} ?[ \|\/]{1} ?[0-9]{4}'
-        matches = re.findall(pattern, item)
-        for match in matches:
-            self.__date.append(match)
+        patterns = (r'[A-Za-z]{3} ?[ \|\/]{1} ?[0-9]{4}', r'(\d{2}\/\d{4})')
+        for pattern in patterns:
+            matches = re.findall(pattern, item)
+            for match in matches:
+                if type(match) in [tuple, list]:
+                    for value in match:
+                        if (value != '') and (value not in self.__date):
+                            self.__date.append(value)
+                elif type(match) is str:
+                    if (match != '') and (match not in self.__date):
+                        self.__date.append(match)
 
     def __FindValue(self, item: str):
-        pattern = r'([\d,]+\s*)'
+        pattern = r'(\d{0,}(?:[.,])*(?:[.,]\d{1,2}))(?!\d)|(\d{1,3}(?:\.\d{3})*(?:,\d{2}))(?!\d)'
         matches = re.findall(pattern, item)
         for match in matches:
-            self.__value.append(match)
+            if type(match) in [tuple, list]:
+                for value in match:
+                    if (value != '') and (value not in self.__value):
+                        self.__value.append(value)
+            elif type(match) is str:
+                if (match != '') and (match not in self.__value):
+                    self.__value.append(match)

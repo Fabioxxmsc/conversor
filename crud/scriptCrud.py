@@ -14,3 +14,6 @@ SC_INSERTCOMBINACOES = ('insert into combinacoes (idcombinacoes, pplDpi, pplTran
 
 SC_INSERTCOMBINACOESDOCUMENTO = 'insert into combinacoesdocumento (iddocumento, idcombinacoes, status, duracao) values (%s, %s, %s, %s)'
 SC_DELETECOMBINACOESDOCUMENTO = 'delete from combinacoesdocumento cd where cd.iddocumento = %s and cd.idcombinacoes = %s'
+
+SC_INSERTESTATISTICA = 'insert into estatistica (iddocumento, idgabarito, idgabaritovalor, idcombinacoes, acerto) values (%s, %s, %s, %s, %s)'
+SC_DELETEESTATISTICA = 'delete from estatistica e where e.iddocumento = %s and e.idgabarito = %s and e.idgabaritovalor = %s and e.idcombinacoes = %s'

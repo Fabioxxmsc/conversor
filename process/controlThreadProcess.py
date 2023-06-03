@@ -7,7 +7,6 @@ import crud.scriptQuerys as sq
 import psycopg2
 from psycopg2.extras import RealDictCursor
 
-
 class ControlThreadProcess:
     __countThread: int
     __listThreads: list[ThreadProcess]

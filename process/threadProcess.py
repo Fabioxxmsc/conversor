@@ -53,7 +53,7 @@ class ThreadProcess(Thread):
             while index >= 0:
                 item = self.__listDataInfo[index]
                 item.idDocumentValue = 0
-
+                
                 if self.__config.DropAll():
                     params = self.__LoadParams()
                 else:
@@ -94,7 +94,6 @@ class ThreadProcess(Thread):
                 gc.collect() #Garbage Collector
                 index -= 1
 
-                break
                 if abort:
                     PrintLog('Thread Process ' + str(self.__threadID) + ' aborted with ' + str(cycle) + ' cycles!', True)
                     break
@@ -148,13 +147,53 @@ class ThreadProcess(Thread):
 
         PrintLog('Begin save document value in Thread ' + str(self.__threadID) + '!')
         item.idDocumentValue += 1
-        self.__saveDocuments.AddDocumentValue(item.idDocument, item.idDocumentValue, item.trainingData.idCombination, consts.CLASSE_VALOR_INSCRICAO, self.__prepareText.registration)
+        self.__saveDocuments.AddDocumentValue(item.idDocument, item.idDocumentValue, item.trainingData.idCombination, consts.CLASSE_VALOR_INSCRICAO, self.__prepareText.registrationB)
 
         item.idDocumentValue += 1
-        self.__saveDocuments.AddDocumentValue(item.idDocument, item.idDocumentValue, item.trainingData.idCombination, consts.CLASSE_VALOR_DATA, self.__prepareText.date)
+        self.__saveDocuments.AddDocumentValue(item.idDocument, item.idDocumentValue, item.trainingData.idCombination, consts.CLASSE_VALOR_DATA, self.__prepareText.dateB)
 
         item.idDocumentValue += 1
-        self.__saveDocuments.AddDocumentValue(item.idDocument, item.idDocumentValue, item.trainingData.idCombination, consts.CLASSE_VALOR_VALOR, self.__prepareText.value)
+        self.__saveDocuments.AddDocumentValue(item.idDocument, item.idDocumentValue, item.trainingData.idCombination, consts.CLASSE_VALOR_VALOR, self.__prepareText.valueB)
         PrintLog('End save document value in Thread ' + str(self.__threadID) + '!')
 
         self.__saveDocuments.AddCombinationDocument(item.idDocument, item.trainingData.idCombination, datetime.now() - dateTimeInit)
+
+        for infoDetail in item.listDataInfoDetail:
+            if infoDetail.idClass == consts.CLASSE_VALOR_DATA:
+                msg = ''
+                if not (infoDetail.valueAnswer in self.__prepareText.date):
+                    dateBase = self.__ClearValues(infoDetail.valueAnswer)
+                    dateList = self.__ClearValues('*'.join(self.__prepareText.date))
+
+                    if not (dateBase in dateList):
+                        msg = 'not'
+
+                print('Id Answer: ' + str(infoDetail.idAnswerValue) + ', value: ' + str(infoDetail.valueAnswer) + ' {} localized!'.format(msg))
+
+            elif infoDetail.idClass == consts.CLASSE_VALOR_INSCRICAO:
+                msg = ''
+                if not (infoDetail.valueAnswer in self.__prepareText.registration):
+                    registrationBase = self.__ClearValues(infoDetail.valueAnswer)
+                    registrationList = self.__ClearValues('*'.join(self.__prepareText.registration))
+
+                    if not (registrationBase in registrationList):
+                        msg = 'not'
+
+                print('Id Answer: ' + str(infoDetail.idAnswerValue) + ', value: ' + str(infoDetail.valueAnswer) + ' {} localized!'.format(msg))
+
+            elif infoDetail.idClass == consts.CLASSE_VALOR_VALOR:
+                msg = ''
+                if not (infoDetail.valueAnswer in self.__prepareText.value):
+                    valueBase = self.__ClearValues(infoDetail.valueAnswer)
+                    valueList = self.__ClearValues('*'.join(self.__prepareText.value))
+
+                    if not (valueBase in valueList):
+                        msg = 'not'
+
+                print('Id Answer: ' + str(infoDetail.idAnswerValue) + ', value: ' + str(infoDetail.valueAnswer) + ' {} localized!'.format(msg))
+
+    def __ClearValues(self, item: str) -> str:
+        result = item
+        for value in consts.LIST_CARACTER:
+            result = result.replace(value, '')
+        return result

@@ -54,6 +54,7 @@ class PrepareInit:
         cur.execute(st.ST_GABARITO)
         cur.execute(st.ST_GABARITOVALOR)        
         cur.execute(st.ST_COMBINACOESDOCUMENTO)
+        cur.execute(st.ST_ESTATISTICA)
 
     def __CreateSequences(self, cur: cursor):
         cur.execute(sc.SE_SEQCLASSEVALOR)
@@ -97,6 +98,7 @@ class PrepareInit:
 
         cur: cursor = connection.cursor()
         try:
+            cur.execute(st.ST_DROPESTATISTICA)
             cur.execute(st.ST_DROPGABARITOVALOR)
             cur.execute(st.ST_DROPGABARITO)
             cur.execute(st.ST_DROPCOMBINACOESDOCUMENTO)            

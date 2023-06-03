@@ -51,6 +51,9 @@ class SaveDocuments():
 
         self.__blockCommand.AddCommand(query, args)
 
+    def AddEstatistic(self, idDoc: int, idAns: int, idAnsValue: int, idComb: int, acerto: float):
+        pass
+
     def __GetArgs(self, file: bytes, name: str, id: int) -> tuple:
         docBinary = psycopg2.Binary(file)
         hashDoc = hashlib.md5(file).hexdigest()

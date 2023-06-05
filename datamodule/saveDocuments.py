@@ -51,8 +51,17 @@ class SaveDocuments():
 
         self.__blockCommand.AddCommand(query, args)
 
-    def AddEstatistic(self, idDoc: int, idAns: int, idAnsValue: int, idComb: int, acerto: float):
-        pass
+    def AddEstatistic(self, idDoc: int, idAns: int, idAnsValue: int, idComb: int, hit: float):
+        query = sc.SC_DELETEESTATISTICA
+        args = (idDoc, idAns, idAnsValue, idComb)
+
+        self.__blockCommand.AddCommand(query, args)
+
+        value = round(hit, 0 if hit == 100 else 4)
+        query = sc.SC_INSERTESTATISTICA
+        args = (idDoc, idAns, idAnsValue, idComb, value)
+
+        self.__blockCommand.AddCommand(query, args)
 
     def __GetArgs(self, file: bytes, name: str, id: int) -> tuple:
         docBinary = psycopg2.Binary(file)

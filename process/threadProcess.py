@@ -4,6 +4,7 @@ from process.adjustmentsOpenCV import AdjustmentsOpenCV
 from process.convertImageToTxt import ConvertImageToTxt
 from process.prepareTextOutput import PrepareTextOutput
 from process.prepareTrainingData import PrepareTrainingData
+from process.estatistic import Estatistic
 from message import PrintLog
 from datamodule.connectionDataBase import ConnectionDataBase
 from datamodule.saveDocuments import SaveDocuments
@@ -22,6 +23,7 @@ class ThreadProcess(Thread):
     __adjustmentCV: AdjustmentsOpenCV = None
     __imageToText: ConvertImageToTxt = None
     __prepareText: PrepareTextOutput = None
+    __estatistic: Estatistic = None
     __con: ConnectionDataBase = None
     __saveDocuments: SaveDocuments = None
     __config: Config = None
@@ -34,6 +36,7 @@ class ThreadProcess(Thread):
         self.__adjustmentCV = AdjustmentsOpenCV()
         self.__imageToText = ConvertImageToTxt()
         self.__prepareText = PrepareTextOutput()
+        self.__estatistic = Estatistic()
         self.__con = connection
         self.__saveDocuments = SaveDocuments(self.__con)
         self.__config = Config()
@@ -156,44 +159,12 @@ class ThreadProcess(Thread):
         self.__saveDocuments.AddDocumentValue(item.idDocument, item.idDocumentValue, item.trainingData.idCombination, consts.CLASSE_VALOR_VALOR, self.__prepareText.valueB)
         PrintLog('End save document value in Thread ' + str(self.__threadID) + '!')
 
+        PrintLog('Begin save combination value in Thread ' + str(self.__threadID) + '!')
         self.__saveDocuments.AddCombinationDocument(item.idDocument, item.trainingData.idCombination, datetime.now() - dateTimeInit)
+        PrintLog('End save combination value in Thread ' + str(self.__threadID) + '!')
 
+        PrintLog('Begin save estatistic value in Thread ' + str(self.__threadID) + '!')
         for infoDetail in item.listDataInfoDetail:
-            if infoDetail.idClass == consts.CLASSE_VALOR_DATA:
-                msg = ''
-                if not (infoDetail.valueAnswer in self.__prepareText.date):
-                    dateBase = self.__ClearValues(infoDetail.valueAnswer)
-                    dateList = self.__ClearValues('*'.join(self.__prepareText.date))
-
-                    if not (dateBase in dateList):
-                        msg = 'not'
-
-                print('Id Answer: ' + str(infoDetail.idAnswerValue) + ', value: ' + str(infoDetail.valueAnswer) + ' {} localized!'.format(msg))
-
-            elif infoDetail.idClass == consts.CLASSE_VALOR_INSCRICAO:
-                msg = ''
-                if not (infoDetail.valueAnswer in self.__prepareText.registration):
-                    registrationBase = self.__ClearValues(infoDetail.valueAnswer)
-                    registrationList = self.__ClearValues('*'.join(self.__prepareText.registration))
-
-                    if not (registrationBase in registrationList):
-                        msg = 'not'
-
-                print('Id Answer: ' + str(infoDetail.idAnswerValue) + ', value: ' + str(infoDetail.valueAnswer) + ' {} localized!'.format(msg))
-
-            elif infoDetail.idClass == consts.CLASSE_VALOR_VALOR:
-                msg = ''
-                if not (infoDetail.valueAnswer in self.__prepareText.value):
-                    valueBase = self.__ClearValues(infoDetail.valueAnswer)
-                    valueList = self.__ClearValues('*'.join(self.__prepareText.value))
-
-                    if not (valueBase in valueList):
-                        msg = 'not'
-
-                print('Id Answer: ' + str(infoDetail.idAnswerValue) + ', value: ' + str(infoDetail.valueAnswer) + ' {} localized!'.format(msg))
-
-    def __ClearValues(self, item: str) -> str:
-        result = item
-        for value in consts.LIST_CARACTER:
-            result = result.replace(value, '')
-        return result
+            hit = self.__estatistic.GetEstatistic(self.__prepareText, infoDetail)
+            self.__saveDocuments.AddEstatistic(item.idDocument, item.idAnswer, infoDetail.idAnswerValue, item.trainingData.idCombination, hit)
+        PrintLog('End save estatistic value in Thread ' + str(self.__threadID) + '!')

@@ -3,7 +3,7 @@
     from estatistica e 
 order by e.iddocumento;
 
--- Todos os documentos que não tiveram nenhuma ocorrência de 100%
+-- Todos os documentos que nÃ£o tiveram nenhuma ocorrÃªncia de 100%
 select distinct d.iddocumento 
               , d.nomedoc 
            from documento d
@@ -16,12 +16,26 @@ select distinct d.iddocumento
 select avg(e.acerto)
      , count(e.acerto)
   from estatistica e;
+ 
+-- RelaÃ§Ã£o de acerto entre DPI
+   select e.acerto
+       , c.ppldpi
+       , c.tssdpi 
+       , count(e.acerto) quantidade
+    from combinacoes c 
+    join estatistica e 
+      on e.idcombinacoes = c.idcombinacoes 
+group by e.acerto
+       , c.ppldpi
+       , c.tssdpi 
+order by 1 asc
+       , 4 desc
 
--- Média de duração por processamento de documento
+-- MÃ©dia de duraÃ§Ã£o por processamento de documento
 select avg(cd.duracao)
   from combinacoesdocumento cd;
  
--- Tempo minímo, médio e máximo de duração por processamento de documento
+-- Tempo minnÃ­mo, mÃ©dio e mÃ¡ximo de duraÃ§Ã£o por processamento de documento
   select cd.iddocumento
        , min(cd.duracao)
        , avg(cd.duracao)
@@ -50,18 +64,18 @@ group by intervalo
 order by intervalo;
 
  
--- Média e total por dezenas de registros de estatistica
-select (select concat('Média: ', round(avg(e.acerto)::numeric, 0), '%, Contagem: ', count(e.acerto)) from estatistica e where e.acerto = 100) AS DE_100_A_100
-     , (select concat('Média: ', round(avg(e.acerto)::numeric, 4), '%, Contagem: ', count(e.acerto)) from estatistica e where e.acerto between 90 and 99.9999) AS DE_90_A_99
-     , (select concat('Média: ', round(avg(e.acerto)::numeric, 4), '%, Contagem: ', count(e.acerto)) from estatistica e where e.acerto between 80 and 89.9999) AS DE_80_A_89
-     , (select concat('Média: ', round(avg(e.acerto)::numeric, 4), '%, Contagem: ', count(e.acerto)) from estatistica e where e.acerto between 70 and 79.9999) AS DE_70_A_79
-     , (select concat('Média: ', round(avg(e.acerto)::numeric, 4), '%, Contagem: ', count(e.acerto)) from estatistica e where e.acerto between 60 and 69.9999) AS DE_60_A_69
-     , (select concat('Média: ', round(avg(e.acerto)::numeric, 4), '%, Contagem: ', count(e.acerto)) from estatistica e where e.acerto between 50 and 59.9999) AS DE_50_A_59
-     , (select concat('Média: ', round(avg(e.acerto)::numeric, 4), '%, Contagem: ', count(e.acerto)) from estatistica e where e.acerto between 40 and 49.9999) AS DE_40_A_49
-     , (select concat('Média: ', round(avg(e.acerto)::numeric, 4), '%, Contagem: ', count(e.acerto)) from estatistica e where e.acerto between 30 and 39.9999) AS DE_30_A_39
-     , (select concat('Média: ', round(avg(e.acerto)::numeric, 4), '%, Contagem: ', count(e.acerto)) from estatistica e where e.acerto between 20 and 29.9999) AS DE_20_A_29
-     , (select concat('Média: ', round(avg(e.acerto)::numeric, 4), '%, Contagem: ', count(e.acerto)) from estatistica e where e.acerto between 10 and 19.9999) AS DE_10_A_19
-     , (select concat('Média: ', round(avg(e.acerto)::numeric, 4), '%, Contagem: ', count(e.acerto)) from estatistica e where e.acerto between 0 and 9.9999) AS DE_0_A_9
+-- MÃ©dia e total por dezenas de registros de estatistica
+select (select concat('Mï¿½dia: ', round(avg(e.acerto)::numeric, 0), '%, Contagem: ', count(e.acerto)) from estatistica e where e.acerto = 100) AS DE_100_A_100
+     , (select concat('Mï¿½dia: ', round(avg(e.acerto)::numeric, 4), '%, Contagem: ', count(e.acerto)) from estatistica e where e.acerto between 90 and 99.9999) AS DE_90_A_99
+     , (select concat('Mï¿½dia: ', round(avg(e.acerto)::numeric, 4), '%, Contagem: ', count(e.acerto)) from estatistica e where e.acerto between 80 and 89.9999) AS DE_80_A_89
+     , (select concat('Mï¿½dia: ', round(avg(e.acerto)::numeric, 4), '%, Contagem: ', count(e.acerto)) from estatistica e where e.acerto between 70 and 79.9999) AS DE_70_A_79
+     , (select concat('Mï¿½dia: ', round(avg(e.acerto)::numeric, 4), '%, Contagem: ', count(e.acerto)) from estatistica e where e.acerto between 60 and 69.9999) AS DE_60_A_69
+     , (select concat('Mï¿½dia: ', round(avg(e.acerto)::numeric, 4), '%, Contagem: ', count(e.acerto)) from estatistica e where e.acerto between 50 and 59.9999) AS DE_50_A_59
+     , (select concat('Mï¿½dia: ', round(avg(e.acerto)::numeric, 4), '%, Contagem: ', count(e.acerto)) from estatistica e where e.acerto between 40 and 49.9999) AS DE_40_A_49
+     , (select concat('Mï¿½dia: ', round(avg(e.acerto)::numeric, 4), '%, Contagem: ', count(e.acerto)) from estatistica e where e.acerto between 30 and 39.9999) AS DE_30_A_39
+     , (select concat('Mï¿½dia: ', round(avg(e.acerto)::numeric, 4), '%, Contagem: ', count(e.acerto)) from estatistica e where e.acerto between 20 and 29.9999) AS DE_20_A_29
+     , (select concat('Mï¿½dia: ', round(avg(e.acerto)::numeric, 4), '%, Contagem: ', count(e.acerto)) from estatistica e where e.acerto between 10 and 19.9999) AS DE_10_A_19
+     , (select concat('Mï¿½dia: ', round(avg(e.acerto)::numeric, 4), '%, Contagem: ', count(e.acerto)) from estatistica e where e.acerto between 0 and 9.9999) AS DE_0_A_9
   from combinacoes c 
  where c.idcombinacoes = 1;
 
@@ -85,7 +99,7 @@ select e.acerto
  group by e.acerto
  order by e.acerto;  
      
--- Combinações que tiveram 100%, ordenados pela maior quantidade de ocorrência 
+-- Combinaï¿½ï¿½es que tiveram 100%, ordenados pela maior quantidade de ocorrï¿½ncia 
   select e.idcombinacoes 
        , c.ppldpi 
        , c.ppltransparent 
@@ -147,11 +161,11 @@ order by e.acerto desc
 select count(*) 
   from documento d; 
 
--- Total de valores extraídos dos documentos
+-- Total de valores extraï¿½dos dos documentos
 select count(*)
   from documentovalor dv;
 
--- Todos os registros de valores extraídos dos documentos
+-- Todos os registros de valores extraï¿½dos dos documentos
    select dv.iddocumento 
         , dv.iddocumentovalor 
         , dv.idcombinacoes 
@@ -166,7 +180,7 @@ select count(*)
         , dv.idcombinacoes
         , dv.idclasse;
        
--- Todos os registros de valores extraídos dos documentos
+-- Todos os registros de valores extraï¿½dos dos documentos
    select dv.iddocumento 
         , dv.iddocumentovalor 
         , dv.idcombinacoes 
@@ -181,6 +195,6 @@ select count(*)
         , dv.idcombinacoes
         , dv.idclasse;
  
--- Total de combinações
+-- Total de combinaï¿½ï¿½es
 select count(*)
   from combinacoes c;
